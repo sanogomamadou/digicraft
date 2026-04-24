@@ -1,0 +1,55 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-04-24T16:15:00Z",
+  "title": "Design System: Digicraft",
+  "extensions": {
+    "colorMeta": {
+      "primary": { "role": "primary", "displayName": "Vitality Blue", "canonical": "#5eb1ff", "tonalRamp": ["#e0f0ff", "#c2e1ff", "#a3d2ff", "#85c3ff", "#5eb1ff", "#3b82f6", "#2563eb", "#1d4ed8"] },
+      "neutral-bg": { "role": "neutral", "displayName": "Deep Obsidian", "canonical": "#050505", "tonalRamp": ["#404040", "#262626", "#1a1a1a", "#111111", "#0a0a0a", "#050505", "#000000", "#000000"] }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Display", "purpose": "Hero headlines only." }
+    },
+    "shadows": [
+      { "name": "glass-glow", "value": "0 25px 50px -12px rgba(0, 0, 0, 0.25)", "purpose": "Under translucent cards to lift them from the void background." }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Pill-shaped, highly tactile primary action.",
+      "html": "<button class=\"ds-btn-primary\">Démarrer</button>",
+      "css": ".ds-btn-primary { background: #5eb1ff; color: #000; padding: 12px 32px; font-family: 'Outfit', sans-serif; font-weight: 500; border: none; border-radius: 9999px; transition: background 0.2s, transform 0.2s; cursor: pointer; } .ds-btn-primary:hover { background: #4a90e2; transform: translateY(-1px); }"
+    },
+    {
+      "name": "Glass Card",
+      "kind": "card",
+      "refersTo": "card-glass",
+      "description": "Luminous, translucent container for data and content.",
+      "html": "<div class=\"ds-card-glass\"><h3>Nos Services</h3><p>Des solutions adaptées.</p></div>",
+      "css": ".ds-card-glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(40px); border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 24px; padding: 24px; color: #fff; font-family: 'Outfit', sans-serif; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Digital Vitality Lab",
+    "overview": "This system is engineered and technical, yet breathes with dynamic vitality. It serves as a precision instrument that demonstrates high-end technological capability to PME owners. It explicitly rejects the \"dead AI\" anti-pattern—instead, it feels alive, custom, and highly crafted.",
+    "keyCharacteristics": ["Engineered and technical", "Glassy and luminous", "Distinctly tactile and smooth", "Alive and fluid"],
+    "rules": [
+      { "name": "The Void and Light Rule", "body": "The background must remain deeply dark and empty to allow the energetic primary color and glassy surfaces to shine. Avoid muddy mid-tones.", "section": "colors" },
+      { "name": "The Glass Light Rule", "body": "Depth is created not through heavy shadows, but through luminous layers, glassmorphism, and translucent borders.", "section": "elevation" }
+    ],
+    "dos": [
+      "Do use purposeful motion and interactive elements to create dynamic vitality.",
+      "Do use backdrop-blur and translucent borders to build glassy, luminous layers.",
+      "Do use extreme font-weight contrast in headlines to create technical elegance."
+    ],
+    "donts": [
+      "Don't make the site look like a random, \"dead,\" AI-generated template.",
+      "Don't use identical card grids (same-sized cards repeated endlessly).",
+      "Don't use side-stripe borders greater than 1px as a colored accent.",
+      "Don't use gradient text combined with a gradient background."
+    ]
+  }
+}
