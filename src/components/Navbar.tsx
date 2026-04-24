@@ -1,9 +1,20 @@
 import { useState, useEffect } from 'react';
 import { Menu, X, Sun, Moon } from 'lucide-react';
 
+const navLinks = [
+  { label: 'Services', id: 'services' },
+  { label: 'Réalisations', id: 'realisations' },
+  { label: 'Processus', id: 'processus' },
+  { label: 'Forfaits', id: 'forfaits' },
+  { label: 'Témoignages', id: 'temoignages' },
+  { label: 'Contact', id: 'contact' },
+];
+
 export default function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [theme, setTheme] = useState('dark');
+  const [scrolled, setScrolled] = useState(false);
+  const [activeId, setActiveId] = useState('accueil');
 
   useEffect(() => {
     if (theme === 'light') {
@@ -13,81 +24,132 @@ export default function Navbar() {
     }
   }, [theme]);
 
-  const toggleTheme = () => {
-    setTheme(prev => prev === 'dark' ? 'light' : 'dark');
-  };
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 20);
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
 
-  const handleScollTo = (e: React.MouseEvent<HTMLAnchorElement>, id: string) => {
+  // Active section tracking via IntersectionObserver
+  useEffect(() => {
+    const ids = ['accueil', 'services', 'realisations', 'processus', 'forfaits', 'temoignages', 'contact'];
+    const observers: IntersectionObserver[] = [];
+
+    ids.forEach(id => {
+      const el = document.getElementById(id);
+      if (!el) return;
+      const obs = new IntersectionObserver(
+        ([entry]) => { if (entry.isIntersecting) setActiveId(id); },
+        { rootMargin: '-40% 0px -50% 0px' }
+      );
+      obs.observe(el);
+      observers.push(obs);
+    });
+
+    return () => observers.forEach(o => o.disconnect());
+  }, []);
+
+  const scrollTo = (e: React.MouseEvent<HTMLAnchorElement>, id: string) => {
     e.preventDefault();
     setIsMobileMenuOpen(false);
-    const element = document.getElementById(id);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-    }
+    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
   };
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 bg-black/50 backdrop-blur-md border-b border-white/10">
-      <div className="flex items-center justify-between px-6 lg:px-12 py-5">
-        {/* Left: Logo */}
-        <div className="w-auto md:w-1/3 flex justify-start">
-          <div className="text-2xl font-bold tracking-wider">
-            <span className="text-[#5eb1ff]">DIGI</span><span className="text-white">CRAFT</span>
-          </div>
+    <nav
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+        scrolled
+          ? 'bg-black/70 backdrop-blur-xl border-b border-white/[0.07]'
+          : 'bg-transparent border-b border-transparent'
+      }`}
+    >
+      <div className="flex items-center justify-between px-5 md:px-8 lg:px-12 py-4 md:py-5">
+        {/* Logo */}
+        <a href="#accueil" onClick={e => scrollTo(e, 'accueil')} className="text-xl font-bold tracking-wider">
+          <span className="text-[#5eb1ff]">DIGI</span>
+          <span className="text-white">CRAFT</span>
+        </a>
+
+        {/* Center links — desktop */}
+        <div className="hidden lg:flex items-center gap-5 text-[13px] text-gray-400">
+          {navLinks.map(link => (
+            <a
+              key={link.id}
+              href={`#${link.id}`}
+              onClick={e => scrollTo(e, link.id)}
+              className={`relative pb-0.5 transition-colors duration-200 ${
+                activeId === link.id ? 'text-white' : 'hover:text-white'
+              }`}
+            >
+              {link.label}
+              {activeId === link.id && (
+                <span className="absolute -bottom-1 left-0 right-0 h-px bg-[#5eb1ff] rounded-full" />
+              )}
+            </a>
+          ))}
         </div>
 
-        {/* Center: Links (Desktop) */}
-        <div className="w-1/3 hidden md:flex justify-center items-center gap-10 text-[15px] text-gray-300">
-          <a href="#accueil" onClick={(e) => handleScollTo(e, 'accueil')} className="hover:text-white transition-colors">Accueil</a>
-          <a href="#services" onClick={(e) => handleScollTo(e, 'services')} className="hover:text-white transition-colors">Services</a>
-          <a href="#realisations" onClick={(e) => handleScollTo(e, 'realisations')} className="hover:text-white transition-colors">Réalisations</a>
-          <a href="mailto:mamadousanogo352@gmail.com" className="hover:text-white transition-colors">Contact</a>
-        </div>
+        {/* Right actions */}
+        <div className="flex items-center gap-2 sm:gap-3">
+          <span className="text-[13px] text-gray-500 hidden lg:block">+(205) 485-5851</span>
 
-        {/* Right: Contact & Menu */}
-        <div className="w-auto md:w-1/3 flex justify-end items-center gap-2 sm:gap-4 lg:gap-6">
-          <span className="text-[15px] text-gray-300 hidden lg:block">+(205)485-5851</span>
-          
-          {/* Theme Toggle Button */}
-          <button 
-            onClick={toggleTheme}
-            className="flex items-center justify-center w-10 h-10 md:w-11 md:h-11 bg-white/[0.03] border border-white/10 rounded-full hover:bg-white/10 transition-colors text-white"
-            aria-label="Toggle theme"
+          {/* Theme toggle */}
+          <button
+            onClick={() => setTheme(t => t === 'dark' ? 'light' : 'dark')}
+            className="w-9 h-9 flex items-center justify-center rounded-full bg-white/[0.04] border border-white/10 text-gray-400 hover:text-white hover:border-white/20 transition-all duration-200"
+            aria-label="Basculer le thème"
           >
-            {theme === 'dark' ? <Sun className="w-4 h-4 md:w-5 md:h-5" /> : <Moon className="w-4 h-4 md:w-5 md:h-5" />}
+            {theme === 'dark' ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
           </button>
 
-          <a href="mailto:mamadousanogo352@gmail.com" className="hidden md:flex w-11 h-11 items-center justify-center bg-white/[0.03] border border-white/10 rounded-full hover:bg-white/10 transition-colors">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="text-white">
-              <circle cx="9" cy="9" r="1.5"/>
-              <circle cx="15" cy="9" r="1.5"/>
-              <circle cx="9" cy="15" r="1.5"/>
-              <circle cx="15" cy="15" r="1.5"/>
-            </svg>
-          </a>
-          
-          {/* Mobile Menu Toggle */}
-          <button 
-            className="md:hidden text-white p-2"
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+          {/* Desktop CTA */}
+          <a
+            href="mailto:mamadousanogo352@gmail.com"
+            className="hidden lg:inline-flex items-center bg-[#5eb1ff] text-black text-sm font-medium px-5 py-2.5 rounded-full hover:bg-white transition-colors duration-200"
           >
-            {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+            Démarrer un projet
+          </a>
+
+          {/* Mobile/tablet menu toggle */}
+          <button
+            className="lg:hidden w-9 h-9 flex items-center justify-center rounded-full bg-white/[0.04] border border-white/10 text-white"
+            onClick={() => setIsMobileMenuOpen(v => !v)}
+            aria-label="Menu"
+          >
+            {isMobileMenuOpen ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
           </button>
         </div>
       </div>
 
-      {/* Mobile Menu Dropdown */}
+      {/* Mobile / tablet menu */}
       {isMobileMenuOpen && (
-        <div className="md:hidden absolute top-full left-0 right-0 w-full bg-black/95 backdrop-blur-xl border-t border-white/10 p-6 flex flex-col gap-6 shadow-2xl overflow-y-auto h-[calc(100vh-73px)]">
-          <a href="#accueil" onClick={(e) => handleScollTo(e, 'accueil')} className="text-lg text-gray-300 hover:text-white transition-colors">Accueil</a>
-          <a href="#services" onClick={(e) => handleScollTo(e, 'services')} className="text-lg text-gray-300 hover:text-white transition-colors">Services</a>
-          <a href="#realisations" onClick={(e) => handleScollTo(e, 'realisations')} className="text-lg text-gray-300 hover:text-white transition-colors">Réalisations</a>
-          <a href="mailto:mamadousanogo352@gmail.com" className="text-lg text-gray-300 hover:text-white transition-colors">Contact</a>
-          <div className="pt-6 border-t border-white/10 flex flex-col gap-4">
-            <span className="text-gray-400">+(205)485-5851</span>
-            <a href="mailto:mamadousanogo352@gmail.com" className="bg-[#5eb1ff] text-black px-6 py-3 rounded-full font-medium text-center">
+        <div className="lg:hidden absolute top-full left-0 right-0 bg-black/95 backdrop-blur-xl border-t border-white/10 p-6 flex flex-col gap-5 shadow-2xl">
+          {/* Accueil (logo link on desktop, explicit on mobile) */}
+          <a
+            href="#accueil"
+            onClick={e => scrollTo(e, 'accueil')}
+            className={`text-lg transition-colors ${activeId === 'accueil' ? 'text-white font-medium' : 'text-gray-400 hover:text-white'}`}
+          >
+            Accueil
+          </a>
+          {navLinks.map(link => (
+            <a
+              key={link.id}
+              href={`#${link.id}`}
+              onClick={e => scrollTo(e, link.id)}
+              className={`text-lg transition-colors ${activeId === link.id ? 'text-white font-medium' : 'text-gray-400 hover:text-white'}`}
+            >
+              {link.label}
+            </a>
+          ))}
+          <div className="pt-5 border-t border-white/10">
+            <a
+              href="mailto:mamadousanogo352@gmail.com"
+              className="bg-[#5eb1ff] text-black px-6 py-3.5 rounded-2xl font-medium text-center block w-full"
+            >
               Démarrer un projet
             </a>
+            <p className="text-center text-gray-500 text-sm mt-4">+(205) 485-5851</p>
           </div>
         </div>
       )}
