@@ -34,7 +34,7 @@ Création de sites web professionnels, modernes et responsives pour présenter v
 - Optimisation SEO (référencement naturel) pour être trouvé sur Google
 - Formulaire de contact intégré
 - Maintenance et hébergement disponibles
-- **Délai** : 1 à 3 semaines selon la complexité
+- **Délai** : 2 à 3 semaines selon la complexité
 
 ### 2. Applications Web & E-commerce
 Développement d'applications web dynamiques, plateformes e-commerce et outils métiers.
@@ -69,7 +69,7 @@ Automatisation intelligente de la relation client avec l'IA.
 Automatisez vos processus métiers répétitifs pour gagner en productivité.
 - Automatisation des emails, facturation, CRM
 - Connexion entre vos outils (Google Workspace, Notion, WhatsApp, etc.)
-- Workflows sur mesure avec Make, Zapier ou code custom
+- Workflows sur mesure avec Make, Zapier ou n8n
 - **Délai** : 1 à 3 semaines
 
 ### 7. Applications SaaS sur-mesure
@@ -136,7 +136,7 @@ R : Oui ! Nous proposons des paiements échelonnés adaptés à votre budget : g
 R : Non, nous intervenons dans toute l'Afrique de l'Ouest et à l'international. Nous travaillons 100% à distance pour les clients hors Bamako.
 
 **Q : Mon site sera-t-il hébergé où ?**
-R : Nous utilisons des serveurs cloud performants (Vercel, Railway, VPS). L'hébergement peut être inclus dans votre forfait ou géré indépendamment selon votre préférence.
+R : Nous utilisons des serveurs cloud performants. L'hébergement peut être inclus dans votre forfait ou géré indépendamment selon votre préférence.
 
 **Q : Proposez-vous de la maintenance après livraison ?**
 R : Oui, chaque forfait inclut une période de support technique. Des contrats de maintenance mensuelle sont aussi disponibles pour assurer la pérennité de votre solution.

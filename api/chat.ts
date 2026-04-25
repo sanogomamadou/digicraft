@@ -1,16 +1,14 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { GoogleGenAI } from '@google/genai';
+import Groq from 'groq-sdk';
 import { DIGICRAFT_SYSTEM_PROMPT } from '../src/chatbot/chatbotKnowledge';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
-  // Only allow POST
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  // API key lives ONLY on the server — never sent to the browser
-  const apiKey = process.env.GEMINI_API_KEY;
-  if (!apiKey || apiKey === 'MY_GEMINI_API_KEY') {
+  const apiKey = process.env.GROQ_API_KEY;
+  if (!apiKey) {
     return res.status(503).json({ error: 'no_api_key' });
   }
 
@@ -24,33 +22,38 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   }
 
   try {
-    const ai = new GoogleGenAI({ apiKey });
+    const groq = new Groq({ apiKey });
 
-    const chat = ai.chats.create({
-      model: 'gemini-2.0-flash',
-      config: { systemInstruction: DIGICRAFT_SYSTEM_PROMPT },
-      history: history ?? [],
-    });
+    // Convert history from Gemini format to OpenAI/Groq format
+    const messages: Groq.Chat.ChatCompletionMessageParam[] = [
+      { role: 'system', content: DIGICRAFT_SYSTEM_PROMPT },
+      ...(history ?? []).map((m) => ({
+        role: (m.role === 'model' ? 'assistant' : 'user') as 'user' | 'assistant',
+        content: m.parts[0]?.text ?? '',
+      })),
+      { role: 'user', content: message.trim() },
+    ];
 
-    // Stream the response
     res.setHeader('Content-Type', 'text/plain; charset=utf-8');
     res.setHeader('Transfer-Encoding', 'chunked');
     res.setHeader('Cache-Control', 'no-cache');
 
-    const stream = await chat.sendMessageStream({ message: message.trim() });
+    const stream = await groq.chat.completions.create({
+      model: 'llama-3.3-70b-versatile',
+      messages,
+      stream: true,
+      max_tokens: 1024,
+    });
 
     for await (const chunk of stream) {
-      const text = chunk.text ?? '';
+      const text = chunk.choices[0]?.delta?.content ?? '';
       if (text) res.write(text);
     }
 
     res.end();
   } catch (err: unknown) {
     const error = err as { status?: number; message?: string };
-    const isQuota =
-      error?.status === 429 ||
-      (error?.message ?? '').toLowerCase().includes('quota');
-
+    const isQuota = error?.status === 429;
     res.status(isQuota ? 429 : 500).json({
       error: isQuota ? 'quota_exceeded' : 'api_error',
     });
