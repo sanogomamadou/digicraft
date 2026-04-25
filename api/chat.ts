@@ -3,12 +3,22 @@ import Groq from 'groq-sdk';
 import { DIGICRAFT_SYSTEM_PROMPT } from '../src/chatbot/chatbotKnowledge';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
+  // CORS headers (needed for Vercel deployments)
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+
+  if (req.method === 'OPTIONS') {
+    return res.status(200).end();
+  }
+
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
   const apiKey = process.env.GROQ_API_KEY;
   if (!apiKey) {
+    console.error('[api/chat] ❌ GROQ_API_KEY is not set in environment');
     return res.status(503).json({ error: 'no_api_key' });
   }
 
@@ -34,27 +44,23 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       { role: 'user', content: message.trim() },
     ];
 
-    res.setHeader('Content-Type', 'text/plain; charset=utf-8');
-    res.setHeader('Transfer-Encoding', 'chunked');
-    res.setHeader('Cache-Control', 'no-cache');
-
-    const stream = await groq.chat.completions.create({
+    // Non-streaming: returns the full response at once (required for Vercel Serverless Functions)
+    const completion = await groq.chat.completions.create({
       model: 'llama-3.3-70b-versatile',
       messages,
-      stream: true,
+      stream: false,
       max_tokens: 1024,
     });
 
-    for await (const chunk of stream) {
-      const text = chunk.choices[0]?.delta?.content ?? '';
-      if (text) res.write(text);
-    }
+    const text = completion.choices[0]?.message?.content ?? '';
+    console.log('[api/chat] ✅ Response ready, chars:', text.length);
 
-    res.end();
+    return res.status(200).send(text);
   } catch (err: unknown) {
+    console.error('[api/chat] ❌ Error:', err);
     const error = err as { status?: number; message?: string };
     const isQuota = error?.status === 429;
-    res.status(isQuota ? 429 : 500).json({
+    return res.status(isQuota ? 429 : 500).json({
       error: isQuota ? 'quota_exceeded' : 'api_error',
     });
   }

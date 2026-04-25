@@ -63,26 +63,13 @@ export function useChatbot() {
           return;
         }
 
-        // Stream the text response chunk by chunk
-        const reader = response.body?.getReader();
-        const decoder = new TextDecoder();
-        let fullContent = '';
-
-        if (reader) {
-          while (true) {
-            if (abortRef.current) break;
-            const { done, value } = await reader.read();
-            if (done) break;
-            const text = decoder.decode(value, { stream: true });
-            fullContent += text;
-            setStreamingContent(fullContent);
-          }
-        }
+        // Read the full text response (non-streaming, compatible with Vercel Serverless)
+        const fullContent = await response.text();
 
         const assistantMsg: ChatMessage = {
           id: `assistant-${Date.now()}`,
           role: 'assistant',
-          content: fullContent || 'Je suis désolé, je n\'ai pas pu générer une réponse.',
+          content: fullContent?.trim() || 'Je suis désolé, je n\'ai pas pu générer une réponse.',
           timestamp: new Date(),
         };
 
