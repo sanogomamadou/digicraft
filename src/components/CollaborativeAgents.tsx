@@ -1,8 +1,8 @@
 import { motion } from 'motion/react';
 
 const stats = [
-  { value: '50+', label: 'Projets livrés' },
-  { value: '8', label: 'Pays couverts' },
+  { value: '30+', label: 'Projets livrés' },
+  { value: '4', label: 'Pays couverts' },
   { value: '98%', label: 'Clients satisfaits' },
   { value: '48h', label: 'Délai de réponse' },
 ];
@@ -31,7 +31,7 @@ export default function CollaborativeAgents() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: '-60px' }}
               transition={{ duration: 0.7, delay: i * 0.1, ease: [0.16, 1, 0.3, 1] }}
-              className="bg-black flex flex-col items-center justify-center py-7 px-4 text-center"
+              className="flex flex-col items-center justify-center py-7 px-4 text-center"
             >
               <span className="text-3xl md:text-4xl font-semibold text-white mb-1">{stat.value}</span>
               <span className="text-xs text-gray-500 tracking-wide">{stat.label}</span>

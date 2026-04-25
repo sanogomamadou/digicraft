@@ -9,7 +9,7 @@ const links = [
 
 export default function Footer() {
   return (
-    <footer id="contact" className="relative bg-black pt-20 pb-0 overflow-hidden border-t border-white/[0.07]">
+    <footer id="contact" className="relative pt-20 pb-0 overflow-hidden border-t border-white/[0.07]">
 
       {/* Ambient background */}
       <div className="absolute inset-0 pointer-events-none z-0">
@@ -43,9 +43,8 @@ export default function Footer() {
 
           {/* Brand */}
           <div>
-            <div className="text-xl font-bold tracking-wider mb-2">
-              <span className="text-[#5eb1ff]">DIGI</span>
-              <span className="text-white">CRAFT</span>
+            <div className="mb-4">
+              <img src="/logo.png" alt="DigiCraft Logo" className="h-14 w-auto object-contain" />
             </div>
             <p className="text-[12px] text-gray-600">Agence digitale · Bamako, Mali</p>
           </div>
@@ -62,7 +61,7 @@ export default function Footer() {
           {/* Contact + socials */}
           <div className="flex items-center gap-3">
             <a
-              href="tel:+2055485851"
+              href="tel:+22366699999"
               className="w-9 h-9 rounded-full bg-white/[0.04] border border-white/10 flex items-center justify-center text-gray-500 hover:text-white hover:border-white/20 transition-all duration-200"
               aria-label="Appeler"
             >
@@ -76,14 +75,14 @@ export default function Footer() {
               <Mail className="w-3.5 h-3.5" />
             </a>
             <a
-              href="#"
+              href="https://www.instagram.com/digi_craft.so/"
               className="w-9 h-9 rounded-full bg-white/[0.04] border border-white/10 flex items-center justify-center text-gray-500 hover:text-white hover:border-white/20 transition-all duration-200"
               aria-label="Instagram"
             >
               <Instagram className="w-3.5 h-3.5" />
             </a>
             <a
-              href="#"
+              href="https://www.tiktok.com/@digicraft_so?_r=1&_t=ZS-95oRvXLj4Z2"
               className="w-9 h-9 rounded-full bg-white/[0.04] border border-white/10 flex items-center justify-center text-gray-500 hover:text-white hover:border-white/20 transition-all duration-200"
               aria-label="TikTok"
             >

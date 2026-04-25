@@ -14,7 +14,7 @@ const blueDots = [
 
 export default function Features() {
   return (
-    <section id="services" className="pt-2 pb-16 md:pb-24 bg-black overflow-hidden">
+    <section id="services" className="pt-2 pb-16 md:pb-24 overflow-hidden">
       {/* Marquee strip */}
       <div className="relative flex overflow-hidden mb-16 w-full [mask-image:linear-gradient(to_right,transparent,black_5%,black_95%,transparent)]">
         <motion.div
@@ -48,88 +48,89 @@ export default function Features() {
           </p>
         </div>
 
-        {/* Asymmetric bento grid */}
-        <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-4 auto-rows-auto">
+        {/* Asymmetric layout combining cards and raw text blocks */}
+        <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-12 gap-10 md:gap-16 items-start">
 
-          {/* Large featured card — Web/App */}
-          <div className="md:col-span-2 bg-white/[0.03] border border-white/10 rounded-3xl p-7 flex flex-col justify-between min-h-[260px] group hover:border-white/20 transition-all duration-300 overflow-hidden relative">
-            <div className="absolute -bottom-8 -right-8 w-48 h-48 bg-[#5eb1ff]/5 rounded-full blur-3xl pointer-events-none group-hover:bg-[#5eb1ff]/10 transition-all duration-500" />
-            <div>
-              <div className="w-10 h-10 rounded-xl bg-[#5eb1ff]/10 flex items-center justify-center mb-5 border border-[#5eb1ff]/20">
-                <Globe className="w-5 h-5 text-[#5eb1ff]" />
-              </div>
-              <h3 className="text-xl font-semibold text-white mb-2">Sites Web & E-commerce</h3>
-              <p className="text-gray-400 text-sm leading-relaxed max-w-sm">
-                Des sites vitrines et boutiques en ligne ultra-rapides, optimisés pour le SEO et la conversion, lisibles sur tous les écrans.
-              </p>
-            </div>
-            <div className="flex flex-wrap gap-2 mt-6">
-              {['React', 'Next.js', 'Shopify', 'SEO'].map(t => (
-                <span key={t} className="text-[11px] text-gray-400 bg-white/5 border border-white/[0.07] px-2.5 py-1 rounded-md">{t}</span>
-              ))}
-            </div>
-          </div>
+          {/* Left Column: Huge Featured Area */}
+          <div className="md:col-span-7 flex flex-col gap-16">
 
-          {/* SaaS card */}
-          <div className="bg-white/[0.03] border border-white/10 rounded-3xl p-6 flex flex-col group hover:border-white/20 transition-all duration-300 overflow-hidden relative min-h-[180px]">
-            <div className="absolute -top-4 -left-4 w-32 h-32 bg-[#93c5fd]/5 rounded-full blur-2xl pointer-events-none" />
-            <div className="w-10 h-10 rounded-xl bg-[#93c5fd]/10 flex items-center justify-center mb-4 border border-[#93c5fd]/20">
-              <Code className="w-5 h-5 text-[#93c5fd]" />
-            </div>
-            <div>
-              <h3 className="text-lg font-semibold text-white mb-1.5">Applications SaaS</h3>
-              <p className="text-gray-400 text-sm leading-relaxed">
-                Outils sur-mesure pour digitaliser et automatiser vos processus internes.
-              </p>
-            </div>
-          </div>
-
-          {/* Design card */}
-          <div className="bg-white/[0.03] border border-white/10 rounded-3xl p-6 flex flex-col group hover:border-white/20 transition-all duration-300 min-h-[180px] relative overflow-hidden">
-            <div className="absolute bottom-0 right-0 w-28 h-28 bg-[#3b82f6]/5 rounded-full blur-2xl pointer-events-none" />
-            <div className="w-10 h-10 rounded-xl bg-[#3b82f6]/10 flex items-center justify-center mb-4 border border-[#3b82f6]/20">
-              <Palette className="w-5 h-5 text-[#3b82f6]" />
-            </div>
-            <div>
-              <h3 className="text-lg font-semibold text-white mb-1.5">Design Graphique</h3>
-              <p className="text-gray-400 text-sm leading-relaxed">
-                Logos, flyers, filtres et identités visuelles percutantes qui marquent les esprits.
-              </p>
-            </div>
-          </div>
-
-          {/* Data + AI card — spans 2 cols */}
-          <div className="md:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-4">
-
-            {/* Data */}
-            <div className="bg-white/[0.03] border border-white/10 rounded-3xl p-6 flex flex-col group hover:border-white/20 transition-all duration-300 relative overflow-hidden">
-              <div className="absolute -bottom-4 -right-4 w-32 h-32 bg-[#bfdbfe]/5 rounded-full blur-2xl pointer-events-none" />
-              <div className="w-10 h-10 rounded-xl bg-[#bfdbfe]/10 flex items-center justify-center mb-4 border border-[#bfdbfe]/15">
-                <LineChart className="w-5 h-5 text-[#bfdbfe]" />
-              </div>
-              <h3 className="text-lg font-semibold text-white mb-1.5">Analyse de Données</h3>
-              <p className="text-gray-400 text-sm leading-relaxed">
-                Tableaux de bord sur-mesure pour visualiser et piloter vos données en temps réel.
-              </p>
-            </div>
-
-            {/* AI Agents — CTA */}
-            <div className="bg-[#5eb1ff]/5 border border-[#5eb1ff]/20 rounded-3xl p-6 flex flex-col justify-between group hover:bg-[#5eb1ff]/8 hover:border-[#5eb1ff]/35 transition-all duration-300 relative overflow-hidden">
-              <div className="absolute -top-6 -right-6 w-32 h-32 bg-[#5eb1ff]/10 rounded-full blur-3xl pointer-events-none" />
+            {/* Sites Web - Highlighted solid card instead of glass */}
+            <div className="bg-[#5eb1ff] rounded-3xl p-8 md:p-12 flex flex-col justify-between min-h-[320px] text-black relative overflow-hidden">
+              <div className="absolute top-0 right-0 w-64 h-64 bg-white/20 rounded-full blur-3xl pointer-events-none -translate-y-1/2 translate-x-1/4" />
               <div>
-                <div className="w-10 h-10 rounded-xl bg-[#5eb1ff]/15 flex items-center justify-center mb-4 border border-[#5eb1ff]/30">
-                  <Bot className="w-5 h-5 text-[#5eb1ff]" />
+                <div className="w-12 h-12 rounded-full bg-black/10 flex items-center justify-center mb-6">
+                  <Globe className="w-6 h-6 text-black" />
                 </div>
-                <h3 className="text-lg font-semibold text-white mb-1.5">Agents IA</h3>
-                <p className="text-gray-400 text-sm leading-relaxed">
-                  Chatbots et agents intelligents pour automatiser vos interactions client 24/7.
+                <h3 className="text-3xl font-bold mb-4 tracking-tight">Sites Web & E-commerce</h3>
+                <p className="text-black/80 text-lg leading-relaxed max-w-md">
+                  Des sites vitrines et boutiques en ligne ultra-rapides, optimisés pour le SEO et la conversion, lisibles sur tous les écrans.
                 </p>
               </div>
+              <div className="flex flex-wrap gap-2 mt-8 relative z-10">
+                {['React', 'Next.js', 'GSAP', 'SEO'].map(t => (
+                  <span key={t} className="text-xs font-semibold text-black bg-white/20 px-3 py-1.5 rounded-full">{t}</span>
+                ))}
+              </div>
+            </div>
+
+            {/* Design Graphique - Raw text block, no card */}
+            <div className="px-2">
+              <div className="flex items-center gap-4 mb-4">
+                <div className="w-10 h-10 rounded-full bg-[#3b82f6]/20 flex items-center justify-center">
+                  <Palette className="w-5 h-5 text-[#5eb1ff]" />
+                </div>
+                <h3 className="text-xl font-medium text-white">Design Graphique</h3>
+              </div>
+              <p className="text-gray-400 text-base leading-relaxed pl-14">
+                Logos, flyers, filtres et identités visuelles percutantes qui marquent les esprits et assoient votre crédibilité.
+              </p>
+            </div>
+
+          </div>
+
+          {/* Right Column: List of other services */}
+          <div className="md:col-span-5 flex flex-col gap-12 pt-4">
+
+            {/* SaaS - Raw text block */}
+            <div>
+              <div className="flex items-center gap-4 mb-4">
+                <div className="w-10 h-10 rounded-full bg-[#93c5fd]/10 flex items-center justify-center">
+                  <Code className="w-5 h-5 text-[#5eb1ff]" />
+                </div>
+                <h3 className="text-xl font-medium text-white">Applications SaaS</h3>
+              </div>
+              <p className="text-gray-400 text-base leading-relaxed pl-14">
+                Outils sur-mesure pour digitaliser et automatiser vos processus internes, augmentant la productivité de vos équipes.
+              </p>
+            </div>
+
+            {/* Data - Raw text block */}
+            <div>
+              <div className="flex items-center gap-4 mb-4">
+                <div className="w-10 h-10 rounded-full bg-[#bfdbfe]/10 flex items-center justify-center">
+                  <LineChart className="w-5 h-5 text-[#5eb1ff]" />
+                </div>
+                <h3 className="text-xl font-medium text-white">Analyse de Données</h3>
+              </div>
+              <p className="text-gray-400 text-base leading-relaxed pl-14">
+                Tableaux de bord sur-mesure pour visualiser et piloter vos données en temps réel. Ne naviguez plus à vue.
+              </p>
+            </div>
+
+            {/* AI Agents — Call to action block */}
+            <div className="mt-4 bg-white/5 rounded-3xl p-8 border border-white/10">
+              <div className="w-10 h-10 rounded-full bg-[#5eb1ff]/20 flex items-center justify-center mb-5">
+                <Bot className="w-5 h-5 text-[#5eb1ff]" />
+              </div>
+              <h3 className="text-xl font-semibold text-white mb-3">Agents IA & Automatisation</h3>
+              <p className="text-gray-400 text-sm leading-relaxed mb-6">
+                Chatbots et agents intelligents pour automatiser vos interactions client 24/7 et réduire vos coûts opérationnels.
+              </p>
               <a
                 href="mailto:mamadousanogo352@gmail.com"
-                className="mt-5 inline-flex items-center justify-center bg-[#5eb1ff] text-black text-sm font-medium px-5 py-2.5 rounded-full hover:bg-white transition-colors"
+                className="inline-flex items-center justify-center bg-white text-black text-sm font-semibold px-6 py-3 rounded-full hover:bg-[#5eb1ff] transition-colors w-full"
               >
-                Démarrer le projet
+                Intégrer l'IA
               </a>
             </div>
 

@@ -5,28 +5,28 @@ import { useGSAP } from '@gsap/react';
 
 const projects = [
   {
-    title: 'E-Commerce NextGen',
+    title: 'OG Shop Sneakers',
     category: 'Site Web & E-commerce',
-    description: 'Une plateforme de vente en ligne ultra-rapide avec gestion des stocks automatisée et paiements intégrés.',
+    description: 'Une plateforme de vente en ligne de baskets avec gestion des stocks, clients, commandes et paiements intégrés.',
     accent: '#5eb1ff',
     tags: ['React', 'Node.js', 'Stripe'],
-    year: '2025',
+    year: '2026',
   },
   {
-    title: 'SmartData Analytics',
+    title: 'Clinique Analytics',
     category: 'SaaS & Data',
-    description: 'Tableau de bord sur-mesure pour la visualisation de données financières en temps réel pour une PME.',
+    description: 'Tableau de bord sur-mesure pour la visualisation de données patients et la gestion des rendez-vous pour une clinique.',
     accent: '#93c5fd',
     tags: ['Vue.js', 'Python', 'D3.js'],
-    year: '2025',
+    year: '2024',
   },
   {
-    title: 'AutoSupport IA',
+    title: 'MobilityBot IA',
     category: 'Intelligence Artificielle',
     description: 'Agent conversationnel intelligent capable de résoudre 70% des requêtes clients automatiquement 24/7.',
     accent: '#3b82f6',
-    tags: ['OpenAI', 'TypeScript', 'Cloud'],
-    year: '2026',
+    tags: ['Gemini', 'TypeScript', 'Python'],
+    year: '2025',
   },
 ];
 

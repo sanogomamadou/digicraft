@@ -57,17 +57,15 @@ export default function Navbar() {
 
   return (
     <nav
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        scrolled
-          ? 'bg-black/70 backdrop-blur-xl border-b border-white/[0.07]'
-          : 'bg-transparent border-b border-transparent'
-      }`}
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled
+        ? 'bg-black/70 backdrop-blur-xl border-b border-white/[0.07]'
+        : 'bg-transparent border-b border-transparent'
+        }`}
     >
       <div className="flex items-center justify-between px-5 md:px-8 lg:px-12 py-4 md:py-5">
         {/* Logo */}
-        <a href="#accueil" onClick={e => scrollTo(e, 'accueil')} className="text-xl font-bold tracking-wider">
-          <span className="text-[#5eb1ff]">DIGI</span>
-          <span className="text-white">CRAFT</span>
+        <a href="#accueil" onClick={e => scrollTo(e, 'accueil')} className="flex items-center">
+          <img src="/logo.png" alt="DigiCraft Logo" className="h-12 w-auto object-contain" />
         </a>
 
         {/* Center links — desktop */}
@@ -77,9 +75,8 @@ export default function Navbar() {
               key={link.id}
               href={`#${link.id}`}
               onClick={e => scrollTo(e, link.id)}
-              className={`relative pb-0.5 transition-colors duration-200 ${
-                activeId === link.id ? 'text-white' : 'hover:text-white'
-              }`}
+              className={`relative pb-0.5 transition-colors duration-200 ${activeId === link.id ? 'text-white' : 'hover:text-white'
+                }`}
             >
               {link.label}
               {activeId === link.id && (
@@ -91,7 +88,7 @@ export default function Navbar() {
 
         {/* Right actions */}
         <div className="flex items-center gap-2 sm:gap-3">
-          <span className="text-[13px] text-gray-500 hidden lg:block">+(205) 485-5851</span>
+          <span className="text-[13px] text-gray-500 hidden lg:block">+223 66 69 99 99</span>
 
           {/* Theme toggle */}
           <button
@@ -149,7 +146,7 @@ export default function Navbar() {
             >
               Démarrer un projet
             </a>
-            <p className="text-center text-gray-500 text-sm mt-4">+(205) 485-5851</p>
+            <p className="text-center text-gray-500 text-sm mt-4">+223 66 69 99 99</p>
           </div>
         </div>
       )}

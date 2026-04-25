@@ -6,6 +6,8 @@ import { useGSAP } from '@gsap/react';
 const plans = [
   {
     name: 'Starter',
+    price: '150 000 F',
+    priceInfo: 'À partir de',
     tagline: 'Idéal pour lancer votre présence en ligne.',
     features: [
       'Site vitrine responsive',
@@ -19,6 +21,8 @@ const plans = [
   },
   {
     name: 'Pro',
+    price: '300 000 F',
+    priceInfo: 'À partir de',
     tagline: 'Pour les entreprises en pleine croissance.',
     features: [
       'Site E-commerce ou Web App',
@@ -32,6 +36,8 @@ const plans = [
   },
   {
     name: 'Enterprise',
+    price: 'Sur devis',
+    priceInfo: 'Adapté à votre projet',
     tagline: 'Solutions sur-mesure avec IA.',
     features: [
       'Application SaaS sur-mesure',
@@ -66,65 +72,66 @@ export default function Pricing() {
   }, { scope: container });
 
   return (
-    <section ref={container} id="forfaits" className="py-16 md:py-28 bg-black relative overflow-hidden">
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[500px] bg-[#5eb1ff]/5 rounded-full blur-[130px] pointer-events-none" />
+    <section ref={container} id="forfaits" aria-labelledby="pricing-heading" className="py-16 md:py-28 relative overflow-hidden">
+      {/* Replaced expensive blur with a radial gradient for better performance */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[500px] bg-[radial-gradient(ellipse_at_center,rgba(94,177,255,0.15)_0%,transparent_70%)] rounded-full pointer-events-none" />
 
       <div className="container mx-auto px-5 md:px-8 relative z-10">
         <div className="pricing-heading text-center mb-14">
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-medium mb-4">Nos Forfaits</h2>
-          <p className="text-gray-400 max-w-md mx-auto">
+          <h2 id="pricing-heading" className="text-3xl sm:text-4xl md:text-5xl font-medium mb-4 text-white/95">Nos Forfaits</h2>
+          <p className="text-white/60 max-w-md mx-auto text-lg">
             Des solutions digitales adaptées à chaque étape de votre croissance.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-5 max-w-5xl mx-auto items-start">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12 max-w-5xl mx-auto items-center">
           {plans.map((plan) => (
             <div
               key={plan.name}
-              className={`pricing-card relative rounded-3xl flex flex-col transition-all duration-300 ${plan.highlighted
-                  ? 'bg-[#5eb1ff]/5 border border-[#5eb1ff]/30 shadow-[0_0_40px_rgba(94,177,255,0.08)] md:-translate-y-3'
-                  : 'bg-white/[0.03] border border-white/10'
+              className={`pricing-card relative flex flex-col transition-all duration-300 ${plan.highlighted
+                ? 'bg-[#5eb1ff] text-[#050505] rounded-[24px] p-8 md:p-10 shadow-[0_25px_50px_-12px_rgba(94,177,255,0.25)] scale-105 z-10'
+                : 'bg-[rgba(255,255,255,0.03)] border border-white/10 rounded-[24px] p-8 md:p-10 backdrop-blur-md'
                 }`}
             >
               {plan.highlighted && (
-                <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 z-10">
-                  <div className="flex items-center gap-1.5 bg-[#5eb1ff] text-black text-[11px] font-semibold px-4 py-1.5 rounded-full whitespace-nowrap">
-                    <Star className="w-3 h-3 fill-black" />
+                <div className="absolute -top-4 left-1/2 -translate-x-1/2 z-10">
+                  <div className="flex items-center gap-1.5 bg-[#050505] text-white/90 text-[11px] font-semibold px-4 py-1.5 rounded-full whitespace-nowrap shadow-lg border border-white/10">
+                    <Star className="w-3 h-3 fill-white/90 text-white/90" />
                     Le plus populaire
                   </div>
                 </div>
               )}
 
-              <div className="p-6 md:p-7 flex flex-col flex-1">
+              <div className="flex flex-col flex-1">
                 {/* Plan name */}
                 <div className="mb-6">
-                  <h3 className="text-lg font-semibold text-white mb-1">{plan.name}</h3>
-                  <p className="text-gray-500 text-sm">{plan.tagline}</p>
+                  <h3 className={`text-xl font-bold mb-1 ${plan.highlighted ? 'text-[#050505]' : 'text-white/90'}`}>{plan.name}</h3>
+                  <p className={`text-sm ${plan.highlighted ? 'text-[#050505]/70' : 'text-white/60'}`}>{plan.tagline}</p>
                 </div>
 
                 {/* Price */}
-                <div className="mb-7">
-                  <div className="text-3xl font-semibold text-white">Sur devis</div>
-                  <p className="text-[11px] text-gray-600 mt-1">Adapté à votre projet</p>
+                <div className="mb-8">
+                  <div className={`text-3xl font-semibold tracking-tight ${plan.highlighted ? 'text-[#050505]' : 'text-white/95'}`}>{plan.price}</div>
+                  <p className={`text-[11px] mt-1 ${plan.highlighted ? 'text-[#050505]/60' : 'text-white/50'}`}>{plan.priceInfo}</p>
                 </div>
 
                 {/* CTA */}
                 <a
                   href={`mailto:mamadousanogo352@gmail.com?subject=${encodeURIComponent(plan.subject)}`}
-                  className={`flex items-center justify-center gap-2 w-full py-3 rounded-2xl text-sm font-medium mb-7 transition-all duration-200 ${plan.highlighted
-                      ? 'bg-[#5eb1ff] text-black hover:bg-white'
-                      : 'bg-white/[0.05] border border-white/10 text-white hover:bg-white/10'
+                  className={`flex items-center justify-center gap-2 w-full py-3.5 rounded-full text-sm font-semibold mb-8 transition-all duration-300 ${plan.highlighted
+                    ? 'bg-[#050505] text-white/90 hover:bg-[#111111] hover:-translate-y-0.5 hover:shadow-lg'
+                    : 'bg-white/5 text-white/90 hover:bg-white/10 hover:-translate-y-0.5 border border-white/10 hover:border-white/20'
                     }`}
                 >
-                  Commencer <ArrowRight className="w-3.5 h-3.5" />
+                  Commencer <ArrowRight className="w-4 h-4" />
                 </a>
 
                 {/* Features */}
-                <ul className="space-y-3 flex-1 mb-7">
+                <ul className="space-y-4 flex-1 mb-8">
                   {plan.features.map(f => (
-                    <li key={f} className="flex items-start gap-3 text-sm text-gray-300">
+                    <li key={f} className={`flex items-start gap-3 text-sm ${plan.highlighted ? 'text-[#050505]/80 font-medium' : 'text-white/70'}`}>
                       <Check
-                        className={`w-4 h-4 mt-0.5 shrink-0 ${plan.highlighted ? 'text-[#5eb1ff]' : 'text-gray-500'}`}
+                        className={`w-4.5 h-4.5 mt-0.5 shrink-0 ${plan.highlighted ? 'text-[#050505]' : 'text-[#5eb1ff]'}`}
                       />
                       {f}
                     </li>
@@ -132,7 +139,7 @@ export default function Pricing() {
                 </ul>
 
                 {/* Footer note */}
-                <div className="pt-5 border-t border-white/[0.07] text-[12px] text-gray-500 text-center">
+                <div className={`pt-6 border-t text-[12px] text-center font-medium ${plan.highlighted ? 'border-[#050505]/10 text-[#050505]/60' : 'border-white/10 text-white/50'}`}>
                   {plan.footer}
                 </div>
               </div>

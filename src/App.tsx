@@ -14,6 +14,7 @@ import Steps from './components/Steps';
 import Pricing from './components/Pricing';
 import Testimonials from './components/Testimonials';
 import Footer from './components/Footer';
+import Chatbot from './components/Chatbot';
 
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -32,7 +33,7 @@ export default function App() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-black text-white font-sans selection:bg-white/30 overflow-x-hidden">
+    <div className="min-h-screen text-white font-sans selection:bg-[#5eb1ff]/30 overflow-x-hidden">
       <Navbar />
       <main>
         <Hero />
@@ -45,6 +46,7 @@ export default function App() {
         <Testimonials />
       </main>
       <Footer />
+      <Chatbot />
     </div>
   );
 }

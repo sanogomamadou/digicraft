@@ -20,18 +20,18 @@ export default function Hero() {
         delay: 0.15
       }
     )
-    .fromTo('.proof-card',
-      { y: 40, opacity: 0, scale: 0.97 },
-      {
-        y: 0,
-        opacity: 1,
-        scale: 1,
-        duration: 1.2,
-        stagger: 0.1,
-        ease: 'expo.out'
-      },
-      "-=1.0"
-    );
+      .fromTo('.proof-card',
+        { y: 40, opacity: 0, scale: 0.97 },
+        {
+          y: 0,
+          opacity: 1,
+          scale: 1,
+          duration: 1.2,
+          stagger: 0.1,
+          ease: 'expo.out'
+        },
+        "-=1.0"
+      );
   }, { scope: container });
 
   return (
@@ -49,7 +49,7 @@ export default function Hero() {
         <div className="hero-line">
           <div className="inline-flex items-center gap-2 bg-white/5 border border-white/10 rounded-full px-4 py-1.5 text-xs text-gray-400 mb-8 tracking-wide">
             <span className="w-1.5 h-1.5 rounded-full bg-[#5eb1ff] animate-pulse" />
-            Agence digitale · Sites Web · SaaS · IA
+            Agence Digitale · Sites Web · Logiciels · IA
           </div>
         </div>
 
@@ -62,7 +62,7 @@ export default function Hero() {
 
         <div className="hero-line">
           <p className="text-gray-400 text-sm sm:text-[15px] font-light mb-10 max-w-md leading-relaxed">
-            Sites Web, SaaS, Data et IA. Des solutions sur-mesure pour accélérer votre croissance et automatiser vos processus.
+            Sites Internet, logiciels sur-mesure et intelligence artificielle. Des solutions simples pour développer votre activité et gagner du temps.
           </p>
         </div>
 
@@ -102,7 +102,7 @@ export default function Hero() {
       <div className="relative z-10 w-full max-w-5xl mx-auto px-5 mt-14 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 items-start">
 
         {/* Card 1: AI Chat demo */}
-        <div className="proof-card bg-white/[0.03] backdrop-blur-2xl border border-white/10 rounded-3xl p-5 flex flex-col gap-3 lg:col-span-1">
+        <div className="proof-card bg-[#060e20] border border-[#5eb1ff]/15 rounded-3xl p-5 flex flex-col gap-3 lg:col-span-1 shadow-lg">
           <div className="flex items-center gap-2.5 mb-1">
             <div className="w-7 h-7 rounded-full bg-[#5eb1ff]/15 border border-[#5eb1ff]/25 flex items-center justify-center">
               <Bot className="w-3.5 h-3.5 text-[#5eb1ff]" />
@@ -131,20 +131,19 @@ export default function Hero() {
         </div>
 
         {/* Card 2: Live growth chart */}
-        <div className="proof-card bg-white/[0.03] backdrop-blur-2xl border border-white/10 rounded-3xl p-5 flex flex-col lg:col-span-1">
+        <div className="proof-card bg-[#060e20] border border-[#5eb1ff]/15 rounded-3xl p-5 flex flex-col lg:col-span-1 shadow-lg">
           <div className="flex items-start justify-between mb-4">
             <div>
               <p className="text-[11px] text-gray-500 mb-0.5 uppercase tracking-wider">Croissance clients</p>
-              <p className="text-2xl font-semibold text-white">+247%</p>
+              <p className="text-2xl font-semibold text-white">+24%</p>
             </div>
             <div className="flex items-center gap-1 bg-green-500/10 border border-green-500/20 rounded-full px-2.5 py-1 text-[11px] text-green-400">
               <TrendingUp className="w-3 h-3" />
-              Ce mois
+              Cette année
             </div>
           </div>
-          <div className="relative h-28 w-full">
+          <div className="relative h-28 w-full mt-auto">
             <svg className="w-full h-full overflow-visible" viewBox="0 0 200 80" preserveAspectRatio="none">
-              {/* Area fill */}
               <defs>
                 <linearGradient id="chart-fill" x1="0" y1="0" x2="0" y2="1">
                   <stop offset="0%" stopColor="#5eb1ff" stopOpacity="0.2" />
@@ -162,19 +161,18 @@ export default function Hero() {
                 strokeWidth="1.5"
                 strokeLinecap="round"
               />
-              {/* Data points */}
-              {[[0,65],[80,40],[160,15],[200,5]].map(([x, y], i) => (
-                <circle key={i} cx={x} cy={y} r="2.5" fill="#050505" stroke="#5eb1ff" strokeWidth="1.5" />
+              {([[0,65],[80,40],[160,15],[200,5]] as [number,number][]).map(([x, y], i) => (
+                <circle key={i} cx={x} cy={y} r="2.5" fill="#060e20" stroke="#5eb1ff" strokeWidth="1.5" />
               ))}
             </svg>
           </div>
-          <div className="flex justify-between text-[10px] text-gray-600 mt-2 px-0.5">
+          <div className="flex justify-between text-[10px] text-gray-600 mt-1 px-0.5">
             <span>Jan</span><span>Mars</span><span>Juin</span><span>Aujourd'hui</span>
           </div>
         </div>
 
         {/* Card 3: Services offered */}
-        <div className="proof-card bg-white/[0.03] backdrop-blur-2xl border border-white/10 rounded-3xl p-5 flex flex-col gap-3 sm:col-span-2 lg:col-span-1">
+        <div className="proof-card bg-[#060e20] border border-[#5eb1ff]/15 rounded-3xl p-5 flex flex-col gap-3 sm:col-span-2 lg:col-span-1 shadow-lg">
           <div className="flex items-center justify-between mb-1">
             <p className="text-xs font-medium text-white">Nos Services</p>
             <a href="#services" className="text-[#5eb1ff] hover:text-white transition-colors">

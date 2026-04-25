@@ -42,7 +42,7 @@ export default function Steps() {
   }, { scope: container });
 
   return (
-    <section ref={container} id="processus" className="py-16 md:py-28 bg-black relative overflow-hidden">
+    <section ref={container} id="processus" className="py-16 md:py-28 relative overflow-hidden">
       {/* Ambient glow */}
       <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[400px] bg-[#5eb1ff]/5 rounded-full blur-[120px] pointer-events-none" />
 
@@ -68,7 +68,7 @@ export default function Steps() {
                 {/* Number node */}
                 <div className="flex md:flex-col md:items-center gap-5 md:gap-4 mb-6 md:mb-0">
                   <div className="relative flex-shrink-0">
-                    <div className="w-11 h-11 rounded-full border border-white/15 bg-black flex items-center justify-center relative z-10 group-hover:border-[#5eb1ff]/40 transition-colors duration-300">
+                    <div className="w-11 h-11 rounded-full border border-white/15 bg-[#060e20] flex items-center justify-center relative z-10 group-hover:border-[#5eb1ff]/40 transition-colors duration-300">
                       <span className="text-xs font-semibold text-[#5eb1ff]">{step.n}</span>
                     </div>
                     {/* Vertical connector — mobile only */}
