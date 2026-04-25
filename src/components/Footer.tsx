@@ -42,7 +42,7 @@ export default function Footer() {
         <div className="flex flex-col md:flex-row items-center justify-between gap-8 pb-10">
 
           {/* Brand */}
-          <div>
+          <div className="flex flex-col items-center md:items-start text-center md:text-left">
             <div className="mb-4">
               <img src="/logo.png" alt="DigiCraft Logo" className="h-14 w-auto object-contain" />
             </div>
