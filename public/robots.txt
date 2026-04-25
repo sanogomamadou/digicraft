@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://digicraft-plum.vercel.app//sitemap.xml
+Sitemap: https://digicraft-plum.vercel.app/sitemap.xml
