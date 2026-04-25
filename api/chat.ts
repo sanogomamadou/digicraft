@@ -59,9 +59,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   }
 
   try {
-    // Use dynamic require to avoid ESM issues
-    // eslint-disable-next-line @typescript-eslint/no-var-requires
-    const Groq = require('groq-sdk');
+    // Use dynamic import to be compatible with ES Modules
+    const { default: Groq } = await import('groq-sdk');
     const groq = new Groq({ apiKey });
 
     const messages = [
