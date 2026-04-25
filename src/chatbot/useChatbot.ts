@@ -1,6 +1,4 @@
 import { useState, useCallback, useRef } from 'react';
-import { GoogleGenAI } from '@google/genai';
-import { DIGICRAFT_SYSTEM_PROMPT } from './chatbotKnowledge';
 
 export type MessageRole = 'user' | 'assistant';
 
@@ -13,43 +11,19 @@ export interface ChatMessage {
 
 export type ChatStatus = 'idle' | 'loading' | 'error' | 'quota_exceeded' | 'no_api_key';
 
-/** Reads the Gemini API key injected by Vite via define. */
-function resolveApiKey(): string | null {
-  try {
-    const key: string = process.env.GEMINI_API_KEY ?? '';
-    if (!key || key === 'MY_GEMINI_API_KEY') return null;
-    return key;
-  } catch {
-    return null;
-  }
-}
-
 export function useChatbot() {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [status, setStatus] = useState<ChatStatus>('idle');
   const [streamingContent, setStreamingContent] = useState<string>('');
   const abortRef = useRef<boolean>(false);
 
-  const hasApiKey = Boolean(resolveApiKey());
+  // The API key lives on the server — we always consider it "present" client-side.
+  // The /api/chat endpoint will return 503 if the key is missing server-side.
+  const hasApiKey = true;
 
   const sendMessage = useCallback(
     async (userText: string) => {
       if (!userText.trim() || status === 'loading') return;
-
-      const apiKey = resolveApiKey();
-
-      // Show a friendly no-key state if key is missing
-      if (!apiKey) {
-        const userMsg: ChatMessage = {
-          id: `user-${Date.now()}`,
-          role: 'user',
-          content: userText.trim(),
-          timestamp: new Date(),
-        };
-        setMessages((prev) => [...prev, userMsg]);
-        setStatus('no_api_key');
-        return;
-      }
 
       const userMsg: ChatMessage = {
         id: `user-${Date.now()}`,
@@ -63,31 +37,46 @@ export function useChatbot() {
       setStreamingContent('');
       abortRef.current = false;
 
+      // Build conversation history for the server
+      const history = messages.map((m) => ({
+        role: m.role === 'user' ? ('user' as const) : ('model' as const),
+        parts: [{ text: m.content }],
+      }));
+
       try {
-        const ai = new GoogleGenAI({ apiKey });
-
-        // We capture messages *before* adding the user message so the
-        // history only contains prior turns (not the current one).
-        const history = messages.map((m) => ({
-          role: m.role === 'user' ? ('user' as const) : ('model' as const),
-          parts: [{ text: m.content }],
-        }));
-
-        const chat = ai.chats.create({
-          model: 'gemini-2.0-flash',
-          config: { systemInstruction: DIGICRAFT_SYSTEM_PROMPT },
-          history,
+        const response = await fetch('/api/chat', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ message: userText.trim(), history }),
         });
 
-        const stream = await chat.sendMessageStream({ message: userText.trim() });
+        // Handle server-side errors
+        if (!response.ok) {
+          const data = await response.json().catch(() => ({})) as { error?: string };
+          if (response.status === 503 || data.error === 'no_api_key') {
+            setStatus('no_api_key');
+          } else if (response.status === 429 || data.error === 'quota_exceeded') {
+            setStatus('quota_exceeded');
+          } else {
+            setStatus('error');
+          }
+          return;
+        }
 
+        // Stream the text response chunk by chunk
+        const reader = response.body?.getReader();
+        const decoder = new TextDecoder();
         let fullContent = '';
 
-        for await (const chunk of stream) {
-          if (abortRef.current) break;
-          const text = chunk.text ?? '';
-          fullContent += text;
-          setStreamingContent(fullContent);
+        if (reader) {
+          while (true) {
+            if (abortRef.current) break;
+            const { done, value } = await reader.read();
+            if (done) break;
+            const text = decoder.decode(value, { stream: true });
+            fullContent += text;
+            setStreamingContent(fullContent);
+          }
         }
 
         const assistantMsg: ChatMessage = {
@@ -100,25 +89,13 @@ export function useChatbot() {
         setMessages((prev) => [...prev, assistantMsg]);
         setStreamingContent('');
         setStatus('idle');
-      } catch (err: unknown) {
+      } catch {
         setStreamingContent('');
-
-        const error = err as { status?: number; message?: string; code?: number };
-        const msg = (error?.message ?? '').toLowerCase();
-        const statusCode = error?.status ?? error?.code ?? 0;
-
-        const isQuota =
-          statusCode === 429 ||
-          msg.includes('quota') ||
-          msg.includes('rate limit') ||
-          msg.includes('resource has been exhausted') ||
-          msg.includes('too many requests');
-
-        setStatus(isQuota ? 'quota_exceeded' : 'error');
+        setStatus('error');
       }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [messages.length, status] // use .length to avoid stale closure issues
+    [messages.length, status]
   );
 
   const resetError = useCallback(() => {
