@@ -1,4 +1,6 @@
+# Robots.txt — DigiCraft
 User-agent: *
 Allow: /
 
-Sitemap: https://digicraft-plum.vercel.app/sitemap.xml
+# Sitemap
+Sitemap: https://digicraftso.com/sitemap.xml
