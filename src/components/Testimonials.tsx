@@ -2,9 +2,9 @@ import { motion } from 'motion/react';
 
 const testimonials = [
   {
-    text: 'DigiCraft a complètement transformé notre présence en ligne. Le site et l\'application SaaS ont automatisé nos processus. L\'impact sur notre croissance a été extraordinaire.',
-    name: 'Mamadou SANOGO',
-    role: 'CEO, OG SHOP SNKRS',
+    text: 'DigiCraft a complètement transformé notre présence en ligne. Le site web qu\'ils ont créé pour nous est à la fois élégant et fonctionnel, et a vraiment mis en valeur notre travail. ',
+    name: 'Mr Keita',
+    role: 'CEO, H2 Design',
     initial: 'M',
     color: '#5eb1ff',
   },

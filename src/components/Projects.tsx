@@ -5,12 +5,13 @@ import { useGSAP } from '@gsap/react';
 
 const projects = [
   {
-    title: 'OG Shop Sneakers',
-    category: 'Site Web & E-commerce',
-    description: 'Une plateforme de vente en ligne de baskets avec gestion des stocks, clients, commandes et paiements intégrés.',
+    title: 'H2 Design',
+    category: 'Site Vitrine',
+    description: 'Site vitrine moderne et responsive pour une agence d\'architecture et de construction, mettant en avant leurs projets et services.',
     accent: '#5eb1ff',
-    tags: ['React', 'Node.js', 'Stripe'],
+    tags: ['React', 'Tailwind CSS', 'GSAP'],
     year: '2026',
+    url: 'https://h2designml.com',
   },
   {
     title: 'Clinique Analytics',
@@ -115,11 +116,23 @@ export default function Projects() {
               {/* Year + arrow */}
               <div className="flex items-center gap-4 shrink-0">
                 <span className="text-xs text-gray-600 font-mono hidden sm:block">{project.year}</span>
-                <div
-                  className="w-9 h-9 rounded-full border border-white/10 flex items-center justify-center text-gray-500 group-hover:border-[#5eb1ff]/40 group-hover:text-[#5eb1ff] transition-all duration-300"
-                >
-                  <ArrowUpRight className="w-4 h-4" />
-                </div>
+                {project.url ? (
+                  <a
+                    href={project.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={(e) => e.stopPropagation()}
+                    className="w-9 h-9 rounded-full border border-white/10 flex items-center justify-center text-gray-500 group-hover:border-[#5eb1ff]/40 group-hover:text-[#5eb1ff] transition-all duration-300"
+                  >
+                    <ArrowUpRight className="w-4 h-4" />
+                  </a>
+                ) : (
+                  <div
+                    className="w-9 h-9 rounded-full border border-white/10 flex items-center justify-center text-gray-500 group-hover:border-[#5eb1ff]/40 group-hover:text-[#5eb1ff] transition-all duration-300"
+                  >
+                    <ArrowUpRight className="w-4 h-4" />
+                  </div>
+                )}
               </div>
             </div>
           ))}
