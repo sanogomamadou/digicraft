@@ -3,18 +3,21 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { useEffect } from 'react';
+import { useEffect, lazy, Suspense } from 'react';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
-import CollaborativeAgents from './components/CollaborativeAgents';
-import Features from './components/Features';
-import Action from './components/Action';
-import Projects from './components/Projects';
-import Steps from './components/Steps';
-import Pricing from './components/Pricing';
-import Testimonials from './components/Testimonials';
-import Footer from './components/Footer';
-import Chatbot from './components/Chatbot';
+
+// Lazy loading de toutes les sections non-critiques (sous le fold)
+// Elles sont téléchargées en arrière-plan après le chargement du hero
+const CollaborativeAgents = lazy(() => import('./components/CollaborativeAgents'));
+const Features = lazy(() => import('./components/Features'));
+const Action = lazy(() => import('./components/Action'));
+const Projects = lazy(() => import('./components/Projects'));
+const Steps = lazy(() => import('./components/Steps'));
+const Pricing = lazy(() => import('./components/Pricing'));
+const Testimonials = lazy(() => import('./components/Testimonials'));
+const Footer = lazy(() => import('./components/Footer'));
+const Chatbot = lazy(() => import('./components/Chatbot'));
 
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -36,17 +39,26 @@ export default function App() {
     <div className="min-h-screen text-white font-sans selection:bg-[#5eb1ff]/30 overflow-x-hidden">
       <Navbar />
       <main>
+        {/* Hero chargé immédiatement — critique pour le LCP */}
         <Hero />
-        <CollaborativeAgents />
-        <Features />
-        <Action />
-        <Projects />
-        <Steps />
-        <Pricing />
-        <Testimonials />
+        {/* Sections chargées en lazy — visibles seulement en scrollant */}
+        <Suspense fallback={null}>
+          <CollaborativeAgents />
+          <Features />
+          <Action />
+          <Projects />
+          <Steps />
+          <Pricing />
+          <Testimonials />
+        </Suspense>
       </main>
-      <Footer />
-      <Chatbot />
+      <Suspense fallback={null}>
+        <Footer />
+      </Suspense>
+      {/* Chatbot en dernier — chargé uniquement quand le reste est prêt */}
+      <Suspense fallback={null}>
+        <Chatbot />
+      </Suspense>
     </div>
   );
 }

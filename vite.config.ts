@@ -49,6 +49,40 @@ export default defineConfig(({ mode }) => {
     server: {
       hmr: process.env.DISABLE_HMR !== 'true',
     },
+    build: {
+      // Code splitting : séparer les grosses librairies en chunks distincts
+      // Permet au navigateur de les mettre en cache indépendamment
+      rollupOptions: {
+        output: {
+          manualChunks(id) {
+            // React core — chargé en premier, toujours
+            if (id.includes('node_modules/react/') || id.includes('node_modules/react-dom/')) {
+              return 'chunk-react';
+            }
+            // GSAP animations — utilisé par le hero
+            if (id.includes('node_modules/gsap') || id.includes('node_modules/@gsap')) {
+              return 'chunk-gsap';
+            }
+            // Lucide icons
+            if (id.includes('node_modules/lucide-react')) {
+              return 'chunk-icons';
+            }
+            // react-simple-maps : très lourd (topojson + d3), chargé en lazy
+            if (id.includes('node_modules/react-simple-maps') || id.includes('node_modules/topojson') || id.includes('node_modules/d3')) {
+              return 'chunk-maps';
+            }
+            // Motion library
+            if (id.includes('node_modules/motion') || id.includes('node_modules/framer-motion')) {
+              return 'chunk-motion';
+            }
+            // SDK IA / Chatbot — chargé uniquement quand le chatbot est ouvert
+            if (id.includes('node_modules/groq-sdk') || id.includes('node_modules/@google/genai')) {
+              return 'chunk-ai-sdk';
+            }
+          },
+        },
+      },
+    },
   };
 });
 

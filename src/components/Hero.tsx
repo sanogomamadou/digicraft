@@ -3,34 +3,40 @@ import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 import { Bot, TrendingUp, ArrowUpRight } from 'lucide-react';
 
+// Détecte si on est sur un appareil mobile/connexion lente
+const isMobile = () => typeof window !== 'undefined' && window.innerWidth < 768;
+
 export default function Hero() {
   const container = useRef<HTMLElement>(null);
 
   useGSAP(() => {
+    const mobile = isMobile();
     const tl = gsap.timeline();
 
+    // Sur mobile : animations ultra-rapides pour affichage immédiat
+    // Sur desktop : animations légèrement plus élégantes
     tl.fromTo('.hero-line',
-      { y: 50, opacity: 0 },
+      { y: mobile ? 20 : 50, opacity: 0 },
       {
         y: 0,
         opacity: 1,
-        duration: 1.4,
-        stagger: 0.12,
+        duration: mobile ? 0.45 : 0.7,
+        stagger: mobile ? 0.055 : 0.08,
         ease: 'expo.out',
-        delay: 0.15
+        delay: 0
       }
     )
       .fromTo('.proof-card',
-        { y: 40, opacity: 0, scale: 0.97 },
+        { y: mobile ? 15 : 40, opacity: 0, scale: mobile ? 1 : 0.97 },
         {
           y: 0,
           opacity: 1,
           scale: 1,
-          duration: 1.2,
-          stagger: 0.1,
+          duration: mobile ? 0.4 : 0.6,
+          stagger: 0.06,
           ease: 'expo.out'
         },
-        "-=1.0"
+        mobile ? '-=0.2' : '-=0.4'
       );
   }, { scope: container });
 
@@ -40,9 +46,11 @@ export default function Hero() {
       ref={container}
       className="relative min-h-screen flex flex-col items-center pt-28 pb-12 overflow-hidden"
     >
-      {/* Background glows */}
-      <div className="absolute top-0 left-0 w-[600px] h-[600px] bg-[#5eb1ff]/15 rounded-full blur-[130px] pointer-events-none -translate-x-1/3 -translate-y-1/4 will-change-transform" />
-      <div className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-[#3b82f6]/10 rounded-full blur-[120px] pointer-events-none translate-x-1/3 translate-y-1/4 will-change-transform" />
+      {/* Background glows — masqués sur mobile pour éviter la charge GPU */}
+      <div className="hidden md:block absolute top-0 left-0 w-[600px] h-[600px] bg-[#5eb1ff]/15 rounded-full blur-[130px] pointer-events-none -translate-x-1/3 -translate-y-1/4 will-change-transform" />
+      <div className="hidden md:block absolute bottom-0 right-0 w-[500px] h-[500px] bg-[#3b82f6]/10 rounded-full blur-[120px] pointer-events-none translate-x-1/3 translate-y-1/4 will-change-transform" />
+      {/* Version allégée des glows pour mobile (blur réduit, pas de GPU overload) */}
+      <div className="md:hidden absolute top-0 left-0 w-[250px] h-[250px] bg-[#5eb1ff]/10 rounded-full blur-[60px] pointer-events-none -translate-x-1/4 -translate-y-1/4" />
 
       {/* Headline + CTA */}
       <div className="relative z-10 flex flex-col items-center text-center px-5 max-w-4xl mx-auto mt-10 md:mt-16">
