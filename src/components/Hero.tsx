@@ -72,7 +72,7 @@ export default function Hero() {
       </div>
 
       {/* Personnage détouré, devant le wordmark */}
-      <div className="hero-person-wrap absolute left-1/2 -translate-x-1/2 md:-translate-x-[46%] top-[92px] sm:top-[110px] md:top-[13vw] lg:top-[150px] h-[66%] sm:h-[calc(100%-110px)] aspect-[4/5] pointer-events-none">
+      <div className="hero-person-wrap absolute left-1/2 -translate-x-1/2 md:-translate-x-[40%] lg:-translate-x-[35%] top-[92px] sm:top-[110px] md:top-[13vw] lg:top-[150px] h-[66%] sm:h-[calc(100%-110px)] aspect-[4/5] pointer-events-none">
         <img
           src="/hero/hero.webp"
           alt="Deux jeunes entrepreneurs maliens en blazer, laptop et tablette à la main"
@@ -91,19 +91,19 @@ export default function Hero() {
       {/* Fondu vers le papier */}
       <div className="absolute inset-x-0 bottom-0 h-[28%] pointer-events-none bg-gradient-to-b from-transparent to-paper" />
 
-      {/* Titre (mode difference : sombre sur le gris, clair sur le personnage) */}
+      {/* Titre en couleurs pleines : pas de mix-blend-mode, que Safari (iPhone, Mac) cesse
+          d'appliquer dès que l'élément est animé (le texte devenait invisible). */}
       <div className="absolute left-4 md:left-8 right-4 md:right-auto bottom-[112px] md:bottom-[124px]">
-        <h1 className="display text-[clamp(36px,7.1vw,104px)] whitespace-nowrap leading-[0.9]">
+        <h1 className="display text-[clamp(52px,6.2vw,92px)] whitespace-nowrap leading-[0.9]">
           <span className="sr-only">DigiCraft, agence digitale au Mali : sites web, logiciels SaaS, IA et automatisation. </span>
-          {/* Le span en difference est lui-même animé : aucun parent ne doit créer de contexte d'empilement */}
           <span className="reveal-mask">
-            <span className="hero-line inline-block text-[#e4e4e4] mix-blend-difference">Vendez plus. Gérez</span>
-            <span className="hero-line inline-block align-top ml-[0.12em] mt-[0.06em]">
-              <Asterisk className="block w-[0.32em] h-[0.32em] text-blue" />
-            </span>
+            <span className="hero-line block text-text">Vendez plus.</span>
           </span>
           <span className="reveal-mask">
-            <span className="hero-line block text-ghost">mieux.</span>
+            <span className="hero-line inline-block text-ghost">Gérez mieux.</span>
+            <span className="hero-line inline-block align-top ml-[0.1em] mt-[0.06em]">
+              <Asterisk className="block w-[0.32em] h-[0.32em] text-blue" />
+            </span>
           </span>
         </h1>
       </div>

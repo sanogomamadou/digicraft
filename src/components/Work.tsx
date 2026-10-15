@@ -138,7 +138,9 @@ export default function Work() {
               <ProjectVisual p={proj} />
             </div>
           ))}
-          <span key={`t-${p.name}`} className="absolute left-5 -top-[0.2em] display text-[124px] text-white mix-blend-difference leading-none pointer-events-none animate-[navIn_.8s_cubic-bezier(.16,1,.3,1)]">
+          {/* Voile sombre en haut : le mot reste lisible sur toutes les captures (pas de mix-blend, cassé sur Safari) */}
+          <div className="absolute inset-x-0 top-0 h-full bg-[linear-gradient(to_bottom,rgba(11,16,34,0.85)_0%,rgba(11,16,34,0.6)_30%,transparent_62%)] pointer-events-none" />
+          <span key={`t-${p.name}`} className="absolute left-5 -top-[0.2em] display text-[124px] text-white leading-none pointer-events-none animate-[navIn_.8s_cubic-bezier(.16,1,.3,1)]">
             {p.tag}
           </span>
         </div>
@@ -162,7 +164,8 @@ export default function Work() {
             <div className="px-4 sm:px-8 mt-5 grid sm:grid-cols-2 gap-5 sm:gap-8 items-start">
               <div className="relative aspect-[4/3] rounded-[20px] overflow-hidden bg-ink">
                 <ProjectVisual p={proj} />
-                <span className="absolute left-4 -top-[0.18em] display text-[80px] text-white mix-blend-difference leading-none">{proj.tag}</span>
+                <div className="absolute inset-x-0 top-0 h-full bg-[linear-gradient(to_bottom,rgba(11,16,34,0.85)_0%,rgba(11,16,34,0.6)_30%,transparent_62%)] pointer-events-none" />
+                <span className="absolute left-4 -top-[0.18em] display text-[80px] text-white leading-none">{proj.tag}</span>
               </div>
               <div>
                 <p className="label text-blue mb-3">{proj.kind}{proj.owned ? ' · Produit DigiCraft' : ''}</p>
