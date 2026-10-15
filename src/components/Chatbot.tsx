@@ -1,151 +1,67 @@
-import { useState, useRef, useEffect, KeyboardEvent } from 'react';
-import {
-  MessageCircle,
-  X,
-  Send,
-  Bot,
-  RefreshCw,
-  Trash2,
-  ChevronDown,
-  AlertTriangle,
-  WifiOff,
-  Sparkles,
-  Key,
-} from 'lucide-react';
+import { useState, useRef, useEffect, KeyboardEvent, type ReactNode } from 'react';
 import { useChatbot } from '../chatbot/useChatbot';
 import { SUGGESTED_QUESTIONS } from '../chatbot/chatbotKnowledge';
+import ChatMarkdown from '../chatbot/ChatMarkdown';
+import { ArrowCorner, Asterisk, CONTACT_EMAIL } from './ui';
 
-/* ─── Markdown-lite renderer ─────────────────────────────────── */
-function renderMarkdown(text: string): string {
-  return text
-    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
-    .replace(/\*(.+?)\*/g, '<em>$1</em>')
-    .replace(/^### (.+)$/gm, '<p class="font-semibold text-white/90 mt-3 mb-1">$1</p>')
-    .replace(/^## (.+)$/gm, '<p class="font-bold text-white mt-3 mb-1">$1</p>')
-    .replace(/^- (.+)$/gm, '<span class="flex gap-1.5 items-start"><span class="text-[#5eb1ff] mt-0.5">•</span><span>$1</span></span>')
-    .replace(/✅/g, '<span class="text-emerald-400">✅</span>')
-    .replace(/🔧/g, '<span>🔧</span>')
-    .replace(/\n/g, '<br/>');
-}
-
-/* ─── Typing dots animation ──────────────────────────────────── */
+/* ─── Typing dots ────────────────────────────────────────────── */
 function TypingDots() {
   return (
-    <div className="flex items-center gap-1 px-1 py-1">
+    <div className="flex items-center gap-1 py-1" aria-label="DIGIBOT écrit">
       {[0, 1, 2].map((i) => (
         <span
           key={i}
-          className="w-1.5 h-1.5 rounded-full bg-[#5eb1ff]/60"
-          style={{ animation: `chatbotBounce 1.2s ease-in-out ${i * 0.2}s infinite` }}
+          className="w-1.5 h-1.5 rounded-full bg-blue-soft"
+          style={{ animation: `digiBounce 1.2s ease-in-out ${i * 0.2}s infinite` }}
         />
       ))}
     </div>
   );
 }
 
-/* ─── Status banners ─────────────────────────────────────────── */
-function QuotaBanner({ onDismiss }: { onDismiss: () => void }) {
+function BotAvatar() {
   return (
-    <div className="flex flex-col gap-3 px-4 py-4 bg-amber-500/10 border border-amber-400/20 rounded-2xl mx-3 my-2">
-      <div className="flex items-start gap-2.5">
-        <AlertTriangle className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
-        <div>
-          <p className="text-sm font-semibold text-amber-300">Service momentanément indisponible</p>
-          <p className="text-xs text-white/50 mt-1 leading-relaxed">
-            Notre assistant IA est temporairement hors ligne suite à un pic d'utilisation. Il sera de retour très prochainement.
-          </p>
-          <p className="text-xs text-white/50 mt-2">
-            En attendant :{' '}
-            <a href="mailto:mamadousanogo352@gmail.com" className="text-[#5eb1ff] hover:underline">
-              mamadousanogo352@gmail.com
-            </a>
-          </p>
-        </div>
-      </div>
-      <button
-        onClick={onDismiss}
-        className="self-end text-xs text-white/40 hover:text-white/70 transition-colors flex items-center gap-1"
-      >
-        <RefreshCw className="w-3 h-3" /> Réessayer
-      </button>
+    <div className="w-7 h-7 rounded-full bg-blue flex items-center justify-center shrink-0">
+      <Asterisk className="w-3 h-3 text-white" />
     </div>
   );
 }
 
-function NoApiKeyBanner({ onDismiss }: { onDismiss: () => void }) {
+/* ─── Status notice (quota, clé absente, erreur réseau) ─────── */
+function Notice({ title, children, action, onAction }: { title: string; children: ReactNode; action: string; onAction: () => void }) {
   return (
-    <div className="flex flex-col gap-3 px-4 py-4 bg-white/[0.04] border border-white/10 rounded-2xl mx-3 my-2">
-      <div className="flex items-start gap-2.5">
-        <Key className="w-4 h-4 text-white/50 shrink-0 mt-0.5" />
-        <div>
-          <p className="text-sm font-semibold text-white/80">Service momentanément indisponible</p>
-          <p className="text-xs text-white/45 mt-1 leading-relaxed">
-            Notre assistant IA sera disponible très prochainement. Contactez-nous directement en attendant.
-          </p>
-          <p className="text-xs text-white/45 mt-2">
-            📧{' '}
-            <a href="mailto:mamadousanogo352@gmail.com" className="text-[#5eb1ff] hover:underline">
-              mamadousanogo352@gmail.com
-            </a>
-          </p>
-        </div>
+    <div className="chatbot-message flex gap-2.5">
+      <BotAvatar />
+      <div className="flex-1 rounded-[18px] rounded-tl-[4px] bg-white/[0.05] px-4 py-3.5">
+        <p className="label text-blue-soft mb-1.5">{title}</p>
+        <div className="text-[14px] leading-relaxed text-white/75">{children}</div>
+        <button onClick={onAction} className="label mt-3 text-white/60 hover:text-white border-b border-white/25 hover:border-white pb-0.5 transition-colors">
+          {action}
+        </button>
       </div>
-      <button
-        onClick={onDismiss}
-        className="self-end text-xs text-white/35 hover:text-white/65 transition-colors flex items-center gap-1"
-      >
-        <RefreshCw className="w-3 h-3" /> OK
-      </button>
     </div>
   );
 }
 
-function ErrorBanner({ onDismiss }: { onDismiss: () => void }) {
-  return (
-    <div className="flex items-start gap-2.5 px-4 py-3 bg-red-500/10 border border-red-400/20 rounded-2xl mx-3 my-2">
-      <WifiOff className="w-4 h-4 text-red-400 shrink-0 mt-0.5" />
-      <div className="flex-1">
-        <p className="text-xs font-semibold text-red-300">Erreur de connexion</p>
-        <p className="text-xs text-white/50 mt-0.5">Une erreur est survenue. Vérifiez votre connexion.</p>
-      </div>
-      <button onClick={onDismiss} className="text-white/40 hover:text-white/70 transition-colors shrink-0">
-        <RefreshCw className="w-3.5 h-3.5" />
-      </button>
-    </div>
-  );
-}
+const EmailLink = () => (
+  <a href={`mailto:${CONTACT_EMAIL}`} className="text-blue-soft underline underline-offset-2 hover:text-white">{CONTACT_EMAIL}</a>
+);
 
-/* ─── Bubble component ────────────────────────────────────────── */
-interface BubbleProps {
-  role: 'user' | 'assistant';
-  content: string;
-  isStreaming?: boolean;
-}
-
-function Bubble({ role, content, isStreaming }: BubbleProps) {
+/* ─── Bubble ─────────────────────────────────────────────────── */
+function Bubble({ role, content, isStreaming }: { role: 'user' | 'assistant'; content: string; isStreaming?: boolean }) {
   const isUser = role === 'user';
   return (
-    <div className={`chatbot-message flex items-end gap-2 ${isUser ? 'flex-row-reverse' : 'flex-row'}`}>
-      {!isUser && (
-        <div className="w-6 h-6 rounded-full bg-[#5eb1ff]/10 border border-[#5eb1ff]/25 flex items-center justify-center shrink-0 mb-0.5">
-          <Bot className="w-3 h-3 text-[#5eb1ff]" />
-        </div>
-      )}
+    <div className={`chatbot-message flex gap-2.5 ${isUser ? 'justify-end' : ''}`}>
+      {!isUser && <BotAvatar />}
       <div
-        className={`max-w-[82%] px-4 py-3 rounded-2xl text-sm leading-relaxed ${
-          isUser
-            ? 'bg-[#5eb1ff] text-[#020611] font-medium rounded-br-sm'
-            : 'bg-[rgba(255,255,255,0.05)] border border-white/8 text-white/80 rounded-bl-sm'
+        className={`max-w-[84%] px-4 py-3 rounded-[18px] text-[14px] leading-relaxed tracking-[-0.01em] ${
+          isUser ? 'bg-blue text-white rounded-tr-[4px]' : 'bg-white/[0.05] text-white/85 rounded-tl-[4px]'
         }`}
       >
-        {isUser ? (
-          content
-        ) : (
+        {isUser ? content : (
           <>
-            <span dangerouslySetInnerHTML={{ __html: renderMarkdown(content) }} />
-            {isStreaming && (
-              <span className="inline-block w-0.5 h-3.5 bg-[#5eb1ff] ml-0.5 animate-pulse align-middle" />
-            )}
+            <ChatMarkdown text={content} />
+            {isStreaming && <span className="inline-block w-0.5 h-3.5 bg-blue-soft ml-0.5 animate-pulse align-middle" />}
           </>
         )}
       </div>
@@ -160,22 +76,33 @@ export default function Chatbot() {
   const [showSuggestions, setShowSuggestions] = useState(true);
   const [hasUnread, setHasUnread] = useState(false);
   const [showScrollBtn, setShowScrollBtn] = useState(false);
+  const [pastHero, setPastHero] = useState(false);
+
+  // Le bouton flottant n'apparaît qu'après le hero (qui a déjà son propre CTA rond)
+  useEffect(() => {
+    const onScroll = () => setPastHero(window.scrollY > window.innerHeight * 0.7);
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const messagesContainerRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
+  const triggerRef = useRef<HTMLButtonElement>(null);
 
   const { messages, status, streamingContent, sendMessage, resetError, clearHistory } = useChatbot();
 
   const isLoading = status === 'loading';
 
-  /* Auto-scroll */
   const scrollToBottom = (smooth = true) => {
-    messagesEndRef.current?.scrollIntoView({ behavior: smooth ? 'smooth' : 'instant' });
+    messagesEndRef.current?.scrollIntoView({ behavior: smooth ? 'smooth' : 'instant', block: 'end' });
   };
 
   useEffect(() => {
-    if (isOpen) setTimeout(() => scrollToBottom(false), 60);
+    if (isOpen) {
+      setTimeout(() => { scrollToBottom(false); inputRef.current?.focus(); }, 60);
+    }
   }, [isOpen]);
 
   useEffect(() => {
@@ -183,25 +110,28 @@ export default function Chatbot() {
     else if (messages.length > 0) setHasUnread(true);
   }, [messages, streamingContent, isOpen]);
 
-  /* Scroll detection */
+  // Échap ferme la fenêtre
+  useEffect(() => {
+    if (!isOpen) return;
+    const onKey = (e: globalThis.KeyboardEvent) => { if (e.key === 'Escape') close(); };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [isOpen]);
+
   const handleScroll = () => {
     const el = messagesContainerRef.current;
     if (!el) return;
     setShowScrollBtn(el.scrollHeight - el.scrollTop - el.clientHeight > 100);
   };
 
-  /* Open */
-  const handleOpen = () => {
-    setIsOpen(true);
-    setHasUnread(false);
-  };
+  const open = () => { setIsOpen(true); setHasUnread(false); };
+  const close = () => { setIsOpen(false); setTimeout(() => triggerRef.current?.focus(), 50); };
 
-  /* Send */
   const handleSend = async () => {
     const text = inputValue.trim();
     if (!text || isLoading) return;
     setInputValue('');
-    if (inputRef.current) { inputRef.current.style.height = 'auto'; }
+    if (inputRef.current) inputRef.current.style.height = 'auto';
     setShowSuggestions(false);
     await sendMessage(text);
   };
@@ -215,183 +145,183 @@ export default function Chatbot() {
     sendMessage(q);
   };
 
-  /* Textarea auto-resize */
   const handleInput = () => {
     const el = inputRef.current;
     if (!el) return;
     el.style.height = 'auto';
-    el.style.height = `${Math.min(el.scrollHeight, 120)}px`;
+    el.style.height = `${Math.min(el.scrollHeight, 110)}px`;
   };
 
   const inputDisabled = isLoading || status === 'quota_exceeded' || status === 'no_api_key';
 
   return (
     <>
-      {/* ── CSS keyframes ── */}
       <style>{`
-        @keyframes chatbotBounce {
-          0%, 80%, 100% { transform: translateY(0); opacity: 0.4; }
-          40% { transform: translateY(-5px); opacity: 1; }
-        }
-        @keyframes chatbotSlideUp {
-          from { opacity: 0; transform: translateY(16px) scale(0.97); }
-          to   { opacity: 1; transform: translateY(0)   scale(1); }
+        @keyframes chatbotIn {
+          from { opacity: 0; transform: translateY(24px) scale(0.97); clip-path: inset(30% 0 0 0 round 28px); }
+          to   { opacity: 1; transform: none; clip-path: inset(0 0 0 0 round 28px); }
         }
         @keyframes chatbotFadeIn {
           from { opacity: 0; transform: translateY(6px); }
-          to   { opacity: 1; transform: translateY(0); }
+          to   { opacity: 1; transform: none; }
         }
-        @keyframes chatbotGlow {
-          0%, 100% { box-shadow: 0 0 0 0 rgba(94,177,255,0.45); }
-          60%       { box-shadow: 0 0 0 10px rgba(94,177,255,0); }
-        }
-        .chatbot-window   { animation: chatbotSlideUp 0.35s cubic-bezier(0.16,1,0.3,1) forwards; }
-        .chatbot-message  { animation: chatbotFadeIn  0.28s ease-out forwards; }
-        .chatbot-glow     { animation: chatbotGlow 2.2s ease-in-out infinite; }
+        .chatbot-window  { animation: chatbotIn 0.6s cubic-bezier(0.16,1,0.3,1) both; }
+        .chatbot-message { animation: chatbotFadeIn 0.35s cubic-bezier(0.16,1,0.3,1) both; }
       `}</style>
 
-      {/* ── Floating trigger ── */}
+      {/* ── Bouton flottant ── */}
       <button
+        ref={triggerRef}
         id="chatbot-trigger"
-        aria-label="Ouvrir le chat DigiBot"
-        onClick={handleOpen}
-        className={`fixed bottom-6 right-6 z-50 w-14 h-14 rounded-full bg-[#5eb1ff] text-[#020611] flex items-center justify-center shadow-[0_8px_30px_rgba(94,177,255,0.4)] transition-all duration-300 hover:scale-110 hover:shadow-[0_12px_40px_rgba(94,177,255,0.6)] active:scale-95 ${
-          isOpen ? 'opacity-0 pointer-events-none scale-75' : 'opacity-100 scale-100 chatbot-glow'
+        aria-label="Ouvrir le chat DIGIBOT"
+        aria-expanded={isOpen}
+        aria-controls="chatbot-window"
+        onClick={open}
+        className={`group fixed bottom-5 right-5 md:bottom-6 md:right-6 z-50 flex items-center transition-all duration-500 ease-[cubic-bezier(.16,1,.3,1)] ${
+          isOpen || !pastHero ? 'opacity-0 pointer-events-none translate-y-4' : 'opacity-100 translate-y-0'
         }`}
       >
-        <MessageCircle className="w-6 h-6" fill="currentColor" />
-        {hasUnread && (
-          <span className="absolute -top-1 -right-1 w-3.5 h-3.5 bg-red-500 rounded-full border-2 border-[#020611]" />
-        )}
+        <span className="hidden md:inline-flex items-center h-10 pl-5 pr-8 -mr-6 rounded-full bg-ink text-white label opacity-0 translate-x-3 transition-all duration-500 ease-[cubic-bezier(.16,1,.3,1)] group-hover:opacity-100 group-hover:translate-x-0">
+          Une question&nbsp;?
+        </span>
+        <span className="relative w-14 h-14 rounded-full bg-blue text-white flex items-center justify-center shadow-[0_14px_30px_-12px_rgba(8,110,186,0.7)] transition-colors duration-300 group-hover:bg-ink">
+          <Asterisk className="w-6 h-6 transition-transform duration-700 ease-[cubic-bezier(.16,1,.3,1)] group-hover:rotate-[120deg]" />
+          {hasUnread && <span className="absolute top-0 right-0 w-3.5 h-3.5 bg-blue-soft rounded-full border-2 border-paper" />}
+        </span>
       </button>
 
-      {/* ── Chat window ── */}
+      {/* ── Fenêtre ── */}
       {isOpen && (
         <div
           id="chatbot-window"
           role="dialog"
-          aria-modal="true"
-          aria-label="Chat DigiBot"
-          className="chatbot-window fixed bottom-6 right-6 z-50 w-[min(390px,calc(100vw-24px))] flex flex-col"
-          style={{ maxHeight: 'min(640px, calc(100vh - 48px))' }}
+          aria-modal="false"
+          aria-label="Chat avec DIGIBOT"
+          className="chatbot-window fixed z-50 inset-x-3 bottom-3 md:inset-x-auto md:right-6 md:bottom-6 md:w-[410px] flex flex-col"
+          style={{ height: 'min(660px, calc(100svh - 24px))' }}
         >
-          <div className="flex flex-col h-full rounded-3xl overflow-hidden border border-white/10 bg-[rgba(6,14,32,0.94)] backdrop-blur-2xl shadow-[0_32px_80px_rgba(0,0,0,0.65),0_0_0_1px_rgba(94,177,255,0.07)]">
+          <div className="relative flex flex-col h-full rounded-[24px] md:rounded-[28px] overflow-hidden bg-ink text-white border border-white/[0.06] shadow-[0_40px_80px_-30px_rgba(10,15,30,0.55)]">
 
-            {/* Header */}
-            <div className="flex items-center gap-3 px-5 py-4 border-b border-white/[0.07] bg-[rgba(94,177,255,0.03)] shrink-0">
-              <div className="relative">
-                <div className="w-9 h-9 rounded-full bg-[#5eb1ff]/10 border border-[#5eb1ff]/30 flex items-center justify-center">
-                  <Bot className="w-4.5 h-4.5 text-[#5eb1ff]" />
+            {/* En-tête */}
+            <div className="relative px-5 pt-5 pb-4 shrink-0 overflow-hidden">
+              <Asterisk className="absolute -right-6 -top-10 w-36 h-36 text-blue/90 pointer-events-none" />
+              <div className="relative flex items-start justify-between gap-3">
+                <div>
+                  <p className="display text-[34px] leading-[0.9]">
+                    DIGIBOT<span className="text-blue-soft">*</span>
+                  </p>
+                  <p className="label text-white/50 mt-2 flex items-center gap-1.5">
+                    <span className={`w-1.5 h-1.5 rounded-full ${isLoading ? 'bg-blue-soft animate-pulse' : 'bg-emerald-400'}`} />
+                    {isLoading ? 'En train d’écrire…' : 'Assistant DigiCraft · En ligne'}
+                  </p>
                 </div>
-                <span className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 bg-emerald-400 rounded-full border-2 border-[#060e20]" />
-              </div>
-              <div className="flex-1 min-w-0">
-                <p className="text-sm font-semibold text-white/95 leading-tight">DigiBot</p>
-                <p className="text-[11px] text-white/40 leading-tight">
-                  {isLoading ? 'En train de rédiger…' : 'Assistant Digicraft · En ligne'}
-                </p>
-              </div>
-              <div className="flex items-center gap-1">
-                {messages.length > 0 && (
+                <div className="flex items-center gap-2">
+                  {messages.length > 0 && (
+                    <button
+                      onClick={clearHistory}
+                      className="label h-9 px-3.5 rounded-full bg-ink/70 border border-white/15 text-white/70 hover:text-white hover:border-white/40 transition-colors"
+                    >
+                      Effacer
+                    </button>
+                  )}
                   <button
-                    onClick={clearHistory}
-                    title="Effacer la conversation"
-                    className="w-8 h-8 rounded-full flex items-center justify-center text-white/25 hover:text-white/65 hover:bg-white/5 transition-all"
+                    onClick={close}
+                    aria-label="Fermer le chat"
+                    className="w-9 h-9 rounded-full bg-[#f3f3f3] text-ink flex items-center justify-center hover:bg-white transition-colors"
                   >
-                    <Trash2 className="w-3.5 h-3.5" />
+                    <svg viewBox="0 0 24 24" className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" /></svg>
                   </button>
-                )}
-                <button
-                  onClick={() => setIsOpen(false)}
-                  aria-label="Fermer le chat"
-                  className="w-8 h-8 rounded-full flex items-center justify-center text-white/25 hover:text-white/65 hover:bg-white/5 transition-all"
-                >
-                  <X className="w-4 h-4" />
-                </button>
+                </div>
               </div>
             </div>
+            <div className="h-px bg-white/[0.07] shrink-0" />
 
             {/* Messages */}
             <div
               ref={messagesContainerRef}
               onScroll={handleScroll}
-              className="flex-1 overflow-y-auto px-4 py-4 space-y-3 min-h-0"
-              style={{ scrollbarWidth: 'thin', scrollbarColor: 'rgba(94,177,255,0.15) transparent' }}
+              data-lenis-prevent
+              className="flex-1 overflow-y-auto overscroll-contain px-4 py-5 space-y-3.5 min-h-0"
+              style={{ scrollbarWidth: 'thin', scrollbarColor: 'rgba(255,255,255,0.12) transparent' }}
+              aria-live="polite"
             >
-              {/* Welcome + suggestions */}
               {messages.length === 0 && (
                 <div className="chatbot-message">
-                  <div className="flex items-start gap-2.5">
-                    <div className="w-7 h-7 rounded-full bg-[#5eb1ff]/10 border border-[#5eb1ff]/25 flex items-center justify-center shrink-0 mt-0.5">
-                      <Sparkles className="w-3.5 h-3.5 text-[#5eb1ff]" />
-                    </div>
-                    <div className="max-w-[85%] px-4 py-3 rounded-2xl rounded-tl-sm bg-[rgba(255,255,255,0.05)] border border-white/8">
-                      <p className="text-sm text-white/80 leading-relaxed">
-                        Bonjour&nbsp;! 👋 Je suis <strong className="text-white">DigiBot</strong>, l'assistant de{' '}
-                        <strong className="text-[#5eb1ff]">Digicraft</strong>.<br />
-                        Comment puis-je vous aider aujourd'hui&nbsp;?
-                      </p>
+                  <div className="flex gap-2.5">
+                    <BotAvatar />
+                    <div className="max-w-[84%] px-4 py-3 rounded-[18px] rounded-tl-[4px] bg-white/[0.05] text-[14px] leading-relaxed text-white/85">
+                      Bonjour&nbsp;! Je suis <span className="text-white font-medium">DIGIBOT</span>, l’assistant de DigiCraft.
+                      Dites-moi votre besoin et je vous oriente vers la bonne solution.
                     </div>
                   </div>
 
                   {showSuggestions && (
-                    <div className="mt-3 flex flex-col gap-1.5 pl-9">
-                      {SUGGESTED_QUESTIONS.map((q) => (
-                        <button
-                          key={q}
-                          onClick={() => handleSuggestion(q)}
-                          className="text-left text-xs px-3.5 py-2.5 rounded-xl border border-[#5eb1ff]/20 bg-[#5eb1ff]/5 text-[#5eb1ff] hover:bg-[#5eb1ff]/12 hover:border-[#5eb1ff]/40 transition-all duration-200"
-                        >
-                          {q}
-                        </button>
-                      ))}
+                    <div className="mt-4 pl-[38px]">
+                      <p className="label text-white/40 mb-2.5">Questions fréquentes</p>
+                      <div className="flex flex-wrap gap-2">
+                        {SUGGESTED_QUESTIONS.map((q) => (
+                          <button
+                            key={q}
+                            onClick={() => handleSuggestion(q)}
+                            className="text-left text-[13px] tracking-[-0.02em] px-3.5 py-2 rounded-full border border-white/15 text-white/85 hover:bg-white hover:text-ink transition-colors duration-200"
+                          >
+                            {q}
+                          </button>
+                        ))}
+                      </div>
                     </div>
                   )}
                 </div>
               )}
 
-              {/* Message bubbles */}
               {messages.map((msg) => (
                 <Bubble key={msg.id} role={msg.role} content={msg.content} />
               ))}
 
-              {/* Streaming bubble */}
               {isLoading && (
-                <div className="chatbot-message flex items-end gap-2">
-                  <div className="w-6 h-6 rounded-full bg-[#5eb1ff]/10 border border-[#5eb1ff]/25 flex items-center justify-center shrink-0 mb-0.5">
-                    <Bot className="w-3 h-3 text-[#5eb1ff]" />
-                  </div>
-                  <div className="max-w-[82%] px-4 py-3 rounded-2xl rounded-bl-sm bg-[rgba(255,255,255,0.05)] border border-white/8 text-sm text-white/80 leading-relaxed">
-                    {streamingContent ? (
-                      <Bubble role="assistant" content={streamingContent} isStreaming />
-                    ) : (
-                      <TypingDots />
-                    )}
-                  </div>
-                </div>
+                streamingContent
+                  ? <Bubble role="assistant" content={streamingContent} isStreaming />
+                  : (
+                    <div className="chatbot-message flex gap-2.5">
+                      <BotAvatar />
+                      <div className="px-4 py-2.5 rounded-[18px] rounded-tl-[4px] bg-white/[0.05]"><TypingDots /></div>
+                    </div>
+                  )
               )}
 
-              {/* Status banners */}
-              {status === 'quota_exceeded' && <QuotaBanner onDismiss={resetError} />}
-              {status === 'no_api_key'    && <NoApiKeyBanner onDismiss={resetError} />}
-              {status === 'error'         && <ErrorBanner onDismiss={resetError} />}
+              {status === 'quota_exceeded' && (
+                <Notice title="Assistant très sollicité" action="Réessayer" onAction={resetError}>
+                  DIGIBOT reçoit beaucoup de demandes en ce moment. Réessayez dans quelques minutes, ou écrivez-nous à <EmailLink />.
+                </Notice>
+              )}
+              {status === 'no_api_key' && (
+                <Notice title="Assistant indisponible" action="Compris" onAction={resetError}>
+                  DIGIBOT est momentanément hors ligne. Écrivez-nous à <EmailLink /> : nous répondons sous 24h.
+                </Notice>
+              )}
+              {status === 'error' && (
+                <Notice title="Message non envoyé" action="Réessayer" onAction={resetError}>
+                  La connexion a été interrompue. Vérifiez votre réseau puis renvoyez votre question.
+                </Notice>
+              )}
 
               <div ref={messagesEndRef} />
             </div>
 
-            {/* Scroll-to-bottom pill */}
             {showScrollBtn && (
               <button
                 onClick={() => scrollToBottom()}
-                className="absolute bottom-[72px] right-4 w-7 h-7 rounded-full bg-[#5eb1ff] text-[#020611] flex items-center justify-center shadow-lg hover:scale-110 transition-transform z-10"
+                aria-label="Aller au dernier message"
+                className="absolute bottom-[96px] left-1/2 -translate-x-1/2 label h-8 px-3.5 rounded-full bg-[#f3f3f3] text-ink shadow-lg hover:bg-white transition-colors z-10"
               >
-                <ChevronDown className="w-3.5 h-3.5" />
+                Derniers messages ↓
               </button>
             )}
 
-            {/* Input */}
-            <div className="px-4 py-3 border-t border-white/[0.07] shrink-0 bg-[rgba(6,14,32,0.6)]">
-              <div className="flex items-end gap-2.5 bg-[rgba(255,255,255,0.04)] border border-white/10 rounded-2xl px-4 py-2.5 focus-within:border-[#5eb1ff]/35 transition-colors duration-200">
+            {/* Saisie */}
+            <div className="px-3 pb-3 pt-3 border-t border-white/[0.07] shrink-0">
+              <div className="flex items-end gap-2 bg-[#f3f3f3] rounded-[26px] pl-5 pr-1.5 py-1.5 outline-2 outline-offset-2 outline-transparent focus-within:outline-blue-soft transition-[outline-color]">
+                <label htmlFor="chatbot-input" className="sr-only">Votre question</label>
                 <textarea
                   ref={inputRef}
                   id="chatbot-input"
@@ -401,23 +331,21 @@ export default function Chatbot() {
                   onKeyDown={handleKeyDown}
                   onInput={handleInput}
                   disabled={inputDisabled}
-                  placeholder={inputDisabled ? 'Service indisponible…' : 'Posez votre question…'}
-                  className="flex-1 bg-transparent text-sm text-white/85 placeholder:text-white/28 outline-none resize-none leading-relaxed disabled:opacity-40 disabled:cursor-not-allowed"
-                  style={{ minHeight: '22px', maxHeight: '120px' }}
+                  placeholder={inputDisabled && !isLoading ? 'Assistant indisponible…' : 'Posez votre question…'}
+                  className="flex-1 self-center bg-transparent text-[15px] text-text placeholder:text-muted outline-none resize-none leading-snug py-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                  style={{ maxHeight: '110px' }}
                 />
                 <button
                   id="chatbot-send-btn"
                   onClick={handleSend}
                   disabled={!inputValue.trim() || inputDisabled}
                   aria-label="Envoyer le message"
-                  className="w-8 h-8 rounded-full bg-[#5eb1ff] text-[#020611] flex items-center justify-center shrink-0 hover:scale-110 active:scale-95 transition-all duration-200 disabled:opacity-30 disabled:scale-100 disabled:cursor-not-allowed shadow-[0_4px_12px_rgba(94,177,255,0.3)]"
+                  className="w-10 h-10 rounded-full bg-blue text-white flex items-center justify-center shrink-0 transition-colors hover:bg-ink disabled:opacity-30 disabled:cursor-not-allowed"
                 >
-                  <Send className="w-3.5 h-3.5" />
+                  <ArrowCorner className="w-4 h-4" />
                 </button>
               </div>
-              <p className="text-center text-[10px] text-white/18 mt-2">
-                Propulsé par Gemini AI · Digicraft {new Date().getFullYear()}
-              </p>
+              <p className="label text-[10px] text-white/35 text-center mt-2.5">Propulsé par IA · DigiCraft</p>
             </div>
           </div>
         </div>

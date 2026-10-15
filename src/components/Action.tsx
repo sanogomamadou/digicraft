@@ -1,8 +1,9 @@
 import { useState, useRef, useEffect, KeyboardEvent } from 'react';
-import { Send, Bot, User, Sparkles } from 'lucide-react';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 import { useChatbot } from '../chatbot/useChatbot';
+import ChatMarkdown from '../chatbot/ChatMarkdown';
+import { ArrowCorner, Asterisk, CONTACT_EMAIL, prefersReducedMotion } from './ui';
 
 const suggestions = [
   'Créer un site e-commerce',
@@ -11,25 +12,24 @@ const suggestions = [
   'Automatiser mes processus',
 ];
 
-/* Markdown-lite renderer (same as Chatbot.tsx) */
-function renderMarkdown(text: string): string {
-  return text
-    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
-    .replace(/\*(.+?)\*/g, '<em>$1</em>')
-    .replace(/^- (.+)$/gm, '<span class="flex gap-1.5"><span class="text-[#5eb1ff]">•</span><span>$1</span></span>')
-    .replace(/\n/g, '<br/>');
-}
-
 function TypingDots() {
   return (
-    <div className="flex items-center gap-1 px-1 py-0.5">
+    <div className="flex items-center gap-1 px-1 py-0.5" aria-label="DIGIBOT écrit">
       {[0, 1, 2].map((i) => (
         <span
           key={i}
-          className="w-1.5 h-1.5 rounded-full bg-[#5eb1ff]/60"
-          style={{ animation: `actionBounce 1.2s ease-in-out ${i * 0.2}s infinite` }}
+          className="w-1.5 h-1.5 rounded-full bg-blue-soft"
+          style={{ animation: `digiBounce 1.2s ease-in-out ${i * 0.2}s infinite` }}
         />
       ))}
+    </div>
+  );
+}
+
+function BotAvatar() {
+  return (
+    <div className="w-8 h-8 rounded-full bg-blue flex items-center justify-center shrink-0">
+      <Asterisk className="w-3.5 h-3.5 text-white" />
     </div>
   );
 }
@@ -66,181 +66,149 @@ export default function Action() {
   };
 
   useGSAP(() => {
-    gsap.fromTo('.action-header > *',
-      { y: 30, opacity: 0 },
-      {
-        scrollTrigger: { trigger: container.current, start: 'top 80%' },
-        y: 0, opacity: 1, duration: 1, stagger: 0.1, ease: 'power3.out',
-      }
-    );
+    if (prefersReducedMotion()) return;
     gsap.fromTo('.action-card',
-      { scale: 0.97, y: 30, opacity: 0 },
+      { y: 60, opacity: 0 },
       {
         scrollTrigger: { trigger: container.current, start: 'top 75%' },
-        scale: 1, y: 0, opacity: 1, duration: 1.1, ease: 'expo.out',
+        y: 0, opacity: 1, duration: 1.2, ease: 'expo.out',
       }
     );
   }, { scope: container });
 
   return (
-    <>
-      <style>{`
-        @keyframes actionBounce {
-          0%, 80%, 100% { transform: translateY(0); opacity: 0.4; }
-          40% { transform: translateY(-5px); opacity: 1; }
-        }
-      `}</style>
-
-      <section ref={container} className="py-16 md:py-24 relative overflow-hidden">
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-[#5eb1ff]/8 rounded-full blur-[130px] pointer-events-none" />
-
-        <div className="container mx-auto px-5 md:px-8 relative z-10">
-          <div className="action-header mb-10 md:mb-14 text-center">
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-medium mb-4">
-              Découvrez DigiCraft en Action
+    <section ref={container} data-nav="dark" className="relative bg-ink text-white pb-20 md:pb-32">
+      <div className="mx-4 md:mx-8 h-px bg-white/[0.08]" />
+      <div className="px-4 md:px-8 pt-14 md:pt-20 grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8">
+        {/* Intro */}
+        <div className="lg:col-span-5 flex flex-col justify-between gap-10">
+          <div>
+            <p className="label text-blue-soft mb-8">Démo en direct</p>
+            <h2 className="display text-[clamp(48px,6vw,92px)] leading-[0.9]">
+              Parlez à<br />DIGIBOT<Asterisk className="inline-block align-top w-[0.3em] h-[0.3em] ml-[0.08em] mt-[0.05em] text-blue" />
             </h2>
-            <p className="text-gray-400 text-base sm:text-lg">
-              Discutez avec DIGIBOT pour découvrir comment nous pouvons vous aider.
-            </p>
+          </div>
+          <p className="label label-justify text-white/70 max-w-[300px]">
+            Notre agent IA répond à vos questions sur nos services et vous oriente vers la bonne solution. Le même type d’agent peut répondre à vos clients, 24h/24.
+          </p>
+        </div>
+
+        {/* Chat */}
+        <div
+          className="action-card lg:col-span-7 bg-ink-2 border border-white/[0.06] rounded-[24px] md:rounded-[28px] overflow-hidden flex flex-col"
+          style={{ height: 'clamp(460px, 64vh, 600px)' }}
+        >
+          <div className="px-5 md:px-7 py-4 flex items-center gap-3 border-b border-white/[0.07] shrink-0">
+            <BotAvatar />
+            <div>
+              <p className="text-[15px] tracking-[-0.03em] leading-none mb-1">DIGIBOT</p>
+              <p className="label text-[10px] text-white/50 flex items-center gap-1.5">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" /> En ligne
+              </p>
+            </div>
+            <p className="ml-auto label text-white/40">Propulsé par IA</p>
           </div>
 
           <div
-            className="action-card max-w-2xl mx-auto bg-white/[0.02] backdrop-blur-xl border border-white/10 rounded-3xl overflow-hidden shadow-2xl flex flex-col"
-            style={{ height: 'clamp(420px, 60vh, 560px)' }}
+            ref={messagesContainerRef}
+            className="flex-1 overflow-y-auto overscroll-contain px-4 md:px-7 py-6 space-y-4 min-h-0"
+            style={{ scrollbarWidth: 'thin', scrollbarColor: 'rgba(255,255,255,0.12) transparent' }}
+            aria-live="polite"
           >
-            {/* Chat header */}
-            <div className="bg-white/[0.03] border-b border-white/10 px-5 py-4 flex items-center gap-3 shrink-0">
-              <div className="w-9 h-9 rounded-full bg-[#5eb1ff]/15 border border-[#5eb1ff]/25 flex items-center justify-center">
-                <Bot className="w-4 h-4 text-[#5eb1ff]" />
-              </div>
-              <div>
-                <p className="text-white font-medium text-sm leading-none mb-1">DIGIBOT</p>
-                <div className="flex items-center gap-1.5 text-[11px] text-green-400">
-                  <span className="w-1.5 h-1.5 rounded-full bg-green-400" />
-                  En ligne
-                </div>
-              </div>
-              <div className="ml-auto flex items-center gap-1.5 text-xs text-gray-500">
-                <Sparkles className="w-3.5 h-3.5 text-[#5eb1ff]" />
-                Propulsé par IA
+            <div className="flex gap-3">
+              <BotAvatar />
+              <div className="max-w-[80%] rounded-[18px] rounded-tl-[4px] px-4 py-3 text-[15px] leading-relaxed bg-white/[0.05] text-white/90">
+                Bonjour&nbsp;! Je suis DIGIBOT, l'assistant DigiCraft. Dites-moi votre besoin et je vous oriente vers la bonne solution.
               </div>
             </div>
 
-            {/* Messages */}
-            <div
-              ref={messagesContainerRef}
-              className="flex-1 overflow-y-auto px-4 py-5 space-y-4 sm:px-6 min-h-0"
-              style={{ scrollbarWidth: 'thin', scrollbarColor: 'rgba(94,177,255,0.15) transparent' }}
-            >
-              {/* Welcome message */}
+            {messages.map((msg) => (
+              <div key={msg.id} className={`flex gap-3 ${msg.role === 'user' ? 'flex-row-reverse' : ''}`}>
+                {msg.role === 'user' ? null : <BotAvatar />}
+                <div className={`max-w-[80%] rounded-[18px] px-4 py-3 text-[15px] leading-relaxed ${
+                  msg.role === 'user'
+                    ? 'bg-blue text-white rounded-tr-[4px]'
+                    : 'bg-white/[0.05] text-white/90 rounded-tl-[4px]'
+                }`}>
+                  {msg.role === 'user' ? (
+                    msg.content
+                  ) : (
+                    <ChatMarkdown text={msg.content} />
+                  )}
+                </div>
+              </div>
+            ))}
+
+            {isLoading && (
               <div className="flex gap-3">
-                <div className="w-7 h-7 rounded-full flex items-center justify-center shrink-0 bg-[#5eb1ff]/15">
-                  <Bot className="w-3.5 h-3.5 text-[#5eb1ff]" />
-                </div>
-                <div className="max-w-[78%] rounded-2xl rounded-tl-sm px-4 py-3 text-sm leading-relaxed bg-white/[0.04] border border-white/10 text-gray-200">
-                  Bonjour&nbsp;! Je suis DIGIBOT, l'assistant DigiCraft. Dites-moi votre besoin et je vous oriente vers la bonne solution.
+                <BotAvatar />
+                <div className="max-w-[80%] rounded-[18px] rounded-tl-[4px] bg-white/[0.05] px-4 py-3 text-[15px] text-white/90 leading-relaxed">
+                  {streamingContent ? (
+                    <>
+                      <ChatMarkdown text={streamingContent} />
+                      <span className="inline-block w-0.5 h-3.5 bg-blue-soft ml-0.5 animate-pulse align-middle" />
+                    </>
+                  ) : (
+                    <TypingDots />
+                  )}
                 </div>
               </div>
+            )}
 
-              {/* Conversation */}
-              {messages.map((msg) => (
-                <div key={msg.id} className={`flex gap-3 ${msg.role === 'user' ? 'flex-row-reverse' : ''}`}>
-                  <div className={`w-7 h-7 rounded-full flex items-center justify-center shrink-0 ${msg.role === 'user' ? 'bg-white/10' : 'bg-[#5eb1ff]/15'}`}>
-                    {msg.role === 'user'
-                      ? <User className="w-3.5 h-3.5 text-white" />
-                      : <Bot className="w-3.5 h-3.5 text-[#5eb1ff]" />}
-                  </div>
-                  <div className={`max-w-[78%] rounded-2xl px-4 py-3 text-sm leading-relaxed ${
-                    msg.role === 'user'
-                      ? 'bg-[#5eb1ff] text-black rounded-tr-sm font-medium'
-                      : 'bg-white/[0.04] border border-white/10 text-gray-200 rounded-tl-sm'
-                  }`}>
-                    {msg.role === 'user' ? (
-                      msg.content
-                    ) : (
-                      <span dangerouslySetInnerHTML={{ __html: renderMarkdown(msg.content) }} />
-                    )}
-                  </div>
+            {hasError && (
+              <div className="flex gap-3">
+                <BotAvatar />
+                <div className="max-w-[80%] rounded-[18px] rounded-tl-[4px] bg-white/[0.05] px-4 py-3 text-[15px] text-white/75 leading-relaxed">
+                  Notre service IA est momentanément indisponible.
+                  Écrivez-nous à{' '}
+                  <a href={`mailto:${CONTACT_EMAIL}`} className="text-blue-soft underline underline-offset-2">
+                    {CONTACT_EMAIL}
+                  </a>{' '}pour un devis gratuit sous 24h.
                 </div>
-              ))}
-
-              {/* Streaming */}
-              {isLoading && (
-                <div className="flex gap-3">
-                  <div className="w-7 h-7 rounded-full bg-[#5eb1ff]/15 flex items-center justify-center shrink-0">
-                    <Bot className="w-3.5 h-3.5 text-[#5eb1ff]" />
-                  </div>
-                  <div className="max-w-[78%] rounded-2xl rounded-tl-sm bg-white/[0.04] border border-white/10 px-4 py-3 text-sm text-gray-200 leading-relaxed">
-                    {streamingContent ? (
-                      <>
-                        <span dangerouslySetInnerHTML={{ __html: renderMarkdown(streamingContent) }} />
-                        <span className="inline-block w-0.5 h-3.5 bg-[#5eb1ff] ml-0.5 animate-pulse align-middle" />
-                      </>
-                    ) : (
-                      <TypingDots />
-                    )}
-                  </div>
-                </div>
-              )}
-
-              {/* Error / unavailable state */}
-              {hasError && (
-                <div className="flex gap-3">
-                  <div className="w-7 h-7 rounded-full bg-white/10 flex items-center justify-center shrink-0">
-                    <Bot className="w-3.5 h-3.5 text-white/50" />
-                  </div>
-                  <div className="max-w-[78%] rounded-2xl rounded-tl-sm bg-white/[0.04] border border-white/10 px-4 py-3 text-sm text-white/70 leading-relaxed">
-                    Notre service IA est momentanément indisponible.
-                    Contactez-nous directement à{' '}
-                    <a href="mailto:mamadousanogo352@gmail.com" className="text-[#5eb1ff] hover:underline">
-                      mamadousanogo352@gmail.com
-                    </a>{' '}pour un devis gratuit sous 24h.
-                  </div>
-                </div>
-              )}
-
-              {/* Suggestions */}
-              {showSuggestions && messages.length === 0 && !isLoading && (
-                <div className="flex flex-wrap gap-2 pt-1">
-                  {suggestions.map((s) => (
-                    <button
-                      key={s}
-                      onClick={() => handleSend(s)}
-                      className="text-[12px] text-gray-300 bg-white/[0.04] border border-white/10 rounded-full px-3.5 py-1.5 hover:border-[#5eb1ff]/30 hover:text-white transition-all duration-200"
-                    >
-                      {s}
-                    </button>
-                  ))}
-                </div>
-              )}
-            </div>
-
-            {/* Input */}
-            <div className="px-4 py-3 border-t border-white/10 sm:px-5 shrink-0">
-              <div className="flex gap-2">
-                <input
-                  ref={inputRef}
-                  type="text"
-                  value={inputValue}
-                  onChange={(e) => setInputValue(e.target.value)}
-                  onKeyDown={handleKeyDown}
-                  disabled={isLoading || hasError}
-                  placeholder={hasError ? 'Service indisponible…' : 'Posez votre question…'}
-                  className="flex-1 bg-white/[0.04] border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white placeholder:text-gray-600 focus:outline-none focus:border-[#5eb1ff]/40 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
-                />
-                <button
-                  type="button"
-                  onClick={() => handleSend(inputValue)}
-                  disabled={!inputValue.trim() || isLoading || hasError}
-                  className="bg-[#5eb1ff] text-black p-2.5 rounded-xl hover:bg-white transition-colors disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center shrink-0"
-                >
-                  <Send className="w-4 h-4" />
-                </button>
               </div>
+            )}
+
+            {showSuggestions && messages.length === 0 && !isLoading && (
+              <div className="flex flex-wrap gap-2 pt-2 pl-11">
+                {suggestions.map((s) => (
+                  <button
+                    key={s}
+                    onClick={() => handleSend(s)}
+                    className="text-[13px] tracking-[-0.02em] text-white/85 border border-white/15 rounded-full px-4 py-2 hover:bg-white hover:text-ink transition-colors duration-200"
+                  >
+                    {s}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+
+          <div className="p-3 md:p-4 border-t border-white/[0.07] shrink-0">
+            <div className="flex items-center gap-2 bg-[#f3f3f3] rounded-full pl-5 pr-1.5 h-14 outline-2 outline-offset-2 outline-transparent focus-within:outline-blue-soft transition-[outline-color]">
+              <input
+                ref={inputRef}
+                type="text"
+                value={inputValue}
+                onChange={(e) => setInputValue(e.target.value)}
+                onKeyDown={handleKeyDown}
+                disabled={isLoading || hasError}
+                placeholder={hasError ? 'Service indisponible…' : 'Posez votre question…'}
+                aria-label="Votre question pour DIGIBOT"
+                className="flex-1 bg-transparent text-[15px] text-text placeholder:text-muted focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed min-w-0"
+              />
+              <button
+                type="button"
+                onClick={() => handleSend(inputValue)}
+                disabled={!inputValue.trim() || isLoading || hasError}
+                aria-label="Envoyer"
+                className="w-11 h-11 rounded-full bg-blue text-white flex items-center justify-center shrink-0 transition-colors hover:bg-ink disabled:opacity-35 disabled:cursor-not-allowed"
+              >
+                <ArrowCorner className="w-4 h-4" />
+              </button>
             </div>
           </div>
         </div>
-      </section>
-    </>
+      </div>
+    </section>
   );
 }

@@ -3,7 +3,7 @@ import react from '@vitejs/plugin-react';
 import path from 'path';
 import { defineConfig, loadEnv } from 'vite';
 
-export default defineConfig(({ mode }) => {
+export default defineConfig(({ mode, isSsrBuild }) => {
   const env = loadEnv(mode, '.', '');
 
   return {
@@ -49,10 +49,14 @@ export default defineConfig(({ mode }) => {
     server: {
       hmr: process.env.DISABLE_HMR !== 'true',
     },
+    // Build serveur (pré-génération du HTML) : tout est embarqué dans le bundle Node
+    ssr: { noExternal: true },
     build: {
+      // Le build serveur n'a pas besoin du dossier public/
+      copyPublicDir: !isSsrBuild,
       // Code splitting : séparer les grosses librairies en chunks distincts
       // Permet au navigateur de les mettre en cache indépendamment
-      rollupOptions: {
+      rollupOptions: isSsrBuild ? {} : {
         output: {
           manualChunks(id) {
             // React core — chargé en premier, toujours
@@ -86,6 +90,14 @@ export default defineConfig(({ mode }) => {
   };
 });
 
+// Modèle Groq par défaut (surchargeable via GROQ_MODEL). Liste : https://console.groq.com/docs/models
+const GROQ_DEFAULT_MODEL = 'openai/gpt-oss-120b';
+
+/** Les modèles « raisonneurs » (gpt-oss, qwen3) : effort bas et raisonnement masqué pour un chat rapide. */
+function reasoningParams(model: string) {
+  return /gpt-oss|qwen3/i.test(model) ? { reasoning_effort: 'low' as const, include_reasoning: false } : {};
+}
+
 async function handleGroqChat(
   res: import('http').ServerResponse,
   apiKey: string,
@@ -101,12 +113,14 @@ async function handleGroqChat(
     console.log('[api/chat] ✅ Message received:', message?.slice(0, 60));
 
     const { default: Groq } = await import('groq-sdk');
-    const { DIGICRAFT_SYSTEM_PROMPT } = await import('./src/chatbot/chatbotKnowledge');
+    // Même base de connaissances qu'en production (source unique dans api/chat.ts)
+    const { DIGICRAFT_SYSTEM_PROMPT } = await import('./api/chat');
 
     const groq = new Groq({ apiKey });
+    const model = process.env.GROQ_MODEL || GROQ_DEFAULT_MODEL;
 
     // Convert history from Gemini format → OpenAI/Groq format
-    const messages: Groq.Chat.ChatCompletionMessageParam[] = [
+    const messages: { role: 'system' | 'user' | 'assistant'; content: string }[] = [
       { role: 'system', content: DIGICRAFT_SYSTEM_PROMPT },
       ...(history ?? []).map((m) => ({
         role: (m.role === 'model' ? 'assistant' : 'user') as 'user' | 'assistant',
@@ -115,19 +129,22 @@ async function handleGroqChat(
       { role: 'user', content: message.trim() },
     ];
 
+    // On ouvre le flux AVANT d'envoyer les en-têtes : une erreur Groq (modèle retiré,
+    // clé invalide, quota) remonte ainsi en vrai code HTTP au lieu d'une réponse vide.
+    const stream = await groq.chat.completions.create({
+      model,
+      messages,
+      stream: true,
+      max_tokens: 1024,
+      ...reasoningParams(model),
+    });
+
     res.writeHead(200, {
       'Content-Type': 'text/plain; charset=utf-8',
       'Transfer-Encoding': 'chunked',
       'Cache-Control': 'no-cache',
     });
     headersSent = true;
-
-    const stream = await groq.chat.completions.create({
-      model: 'llama-3.3-70b-versatile',
-      messages,
-      stream: true,
-      max_tokens: 1024,
-    });
 
     let totalChars = 0;
     for await (const chunk of stream) {

@@ -1,116 +1,84 @@
 ---
-name: Digicraft
-description: A digital agency platform offering B2B services
+name: DigiCraft
+description: Agence digitale B2B (Bamako) — sites, SaaS, IA, automatisation
 colors:
-  primary: "#5eb1ff"
-  neutral-bg: "#050505"
-  surface: "#111111"
-  surface-light: "#1a1a1a"
-  border-translucent: "rgba(255, 255, 255, 0.1)"
+  blue: "#086EBA"
+  blue-soft: "#5CB6F9"
+  ink: "#0B1022"
+  ink-2: "#141A31"
+  paper: "#EFEFEF"
+  hero-top: "#A3A8AD"
+  logo-navy: "#04092F"
+  text: "#0E1328"
+  muted: "#565C6C"
+  ghost: "#7F8592"
 typography:
+  wordmark:
+    fontFamily: "\"Archivo\", sans-serif"
+    fontVariation: "wdth 62, wght 800"
   display:
-    fontFamily: "\"Outfit\", ui-sans-serif, system-ui, sans-serif"
-    fontWeight: 300
-  body:
-    fontFamily: "\"Outfit\", ui-sans-serif, system-ui, sans-serif"
-    fontWeight: 300
-    fontSize: "15px"
+    fontFamily: "\"Inter Tight\", sans-serif"
+    fontWeight: 500
+    letterSpacing: "-0.05em"
+  label:
+    fontFamily: "\"Inter Tight\", sans-serif"
+    fontSize: "12px"
+    textTransform: uppercase
 rounded:
-  full: "9999px"
-  3xl: "24px"
-spacing:
-  md: "16px"
-components:
-  button-primary:
-    backgroundColor: "{colors.primary}"
-    textColor: "#000000"
-    rounded: "{rounded.full}"
-    padding: "12px 32px"
-  card-glass:
-    backgroundColor: "rgba(255, 255, 255, 0.03)"
-    rounded: "{rounded.3xl}"
-    padding: "24px"
+  card: "28px"
+  pill: "9999px"
 ---
 
-# Design System: Digicraft
+# Design System: DigiCraft — « Affiche de sport »
 
-## 1. Overview
+## Contrat de direction
 
-**Creative North Star: "The Digital Vitality Lab"**
+**THESIS.** Une agence digitale présentée comme une campagne de marque sportive : un wordmark géant, une personne en mouvement, des chiffres énormes. On refuse le « dark mode + glow bleu + cartes glass » des agences tech.
 
-This system is engineered and technical, yet breathes with dynamic vitality. It serves as a precision instrument that demonstrates high-end technological capability to PME owners. It explicitly rejects the "dead AI" anti-pattern—instead, it feels alive, custom, and highly crafted. 
+**OWN-WORLD.** Dégradé studio gris neutre qui fond vers un papier #EFEFEF ; sections encre marine #0B1022 ; un seul accent, le bleu DigiCraft #086EBA (teinte du logo, 206°, en plus profond), utilisé en masse (wordmark, chiffres géants, marquee, astérisques). Grotesque serrée (Inter Tight, tracking négatif) + wordmark Archivo ultra-condensé. Petites capitales justifiées, filets 1px, pilules encre + rond bleu fléché ↱, astérisque ✱ comme signature.
 
-**Key Characteristics:**
-- Engineered and technical
-- Glassy and luminous
-- Distinctly tactile and smooth
-- Alive and fluid
+**STORY.** Le visiteur (dirigeant de PME) comprend en une vue : DigiCraft fait sites, SaaS, IA, automatisation ; il voit des produits réels en ligne ; il lit des avis de clients identifiables ; il clique « Démarrer un projet ».
 
-## 2. Colors
+**FIRST VIEWPORT.** « DIGICRAFT » bord à bord en bleu en haut ; une personne détourée en saut passe devant les lettres ; labels services en petites capitales sur le filet ; titre en bas à gauche « Digitalisez plus vite. Grandissez plus loin.✱ » ; 30+ projets avec avatars ; gros bouton rond blanc ↱ en bas à droite (CTA).
 
-A deep, dark canvas punctuated by vibrant, energetic light.
+**FORM.** Brief épinglé par l'utilisateur (référence « Nemuta »), reproduit fidèlement, accent rouge remplacé par le bleu du logo DigiCraft.
 
-### Primary
-- **Vitality Blue** (#5eb1ff): The core accent. Used for primary buttons, energetic text highlights, SVG strokes, and luminous ambient glows. It drives the "vitality" of the lab.
+## Couleurs
 
-### Neutral
-- **Deep Obsidian** (#050505): The absolute background. The void in which the interface floats.
-- **Surface Dark** (#111111): Base color for solid elements resting directly on the background.
-- **Surface Light** (#1a1a1a): Slightly elevated solid surfaces.
-- **Translucent Border** (rgba(255, 255, 255, 0.1)): The structural linework that defines glass elements without weighing them down.
+Toute la palette dérive du logo (bleu ciel `#5CB6F9`, marine `#04092F`).
 
-### Named Rules
-**The Void and Light Rule.** The background must remain deeply dark and empty to allow the energetic primary color and glassy surfaces to shine. Avoid muddy mid-tones.
+- **Bleu DigiCraft** `#086EBA` : la couleur de masse (wordmark, chiffres géants, marquee, astérisques, ronds CTA). Même teinte que le bleu du logo (206°), assombrie pour rester lisible : 4,6:1 sur papier, 5,3:1 avec du blanc dessus.
+- **Bleu logo** `#5CB6F9` : accents et petit texte sur fond sombre (8,5:1 sur encre).
+- **Encre marine** `#0B1022`, carte `#141A31`, filets `rgba(255,255,255,.08)`.
+- **Texte** `#0E1328` (marine très sombre), **secondaire** `#565C6C`, **seconde ligne des titres** `#7F8592` (≥ 3:1 en grand corps).
+- **Papier** `#EFEFEF`, filets `rgba(0,0,0,.1)`. **Fond du hero** : dégradé neutre `#A3A8AD` → `#EFEFEF` (neutre pour que le bleu ressorte).
 
-## 3. Typography
+Règle : pas de dégradé décoratif, pas de glow, pas de verre. Le seul dégradé est le fond studio du hero.
 
-**Display Font:** Outfit
-**Body Font:** Outfit
-**Fallback:** ui-sans-serif, system-ui, sans-serif
+## Logo
 
-**Character:** A highly modern, geometric-yet-approachable sans-serif that balances technical precision with friendly readability.
+Deux versions horizontales (monogramme D-O + « DIGICRAFT / SOLUTIONS DIGITALES »), couleurs d'origine conservées :
+`/logo-light.webp` (marine, pour fonds clairs) et `/logo-dark.webp` (bleu ciel, pour fonds sombres). La nav bascule de l'une à l'autre selon la section ; aucun texte à côté du logo. Sources dans `assets-src/`.
 
-### Hierarchy
-- **Display** (Light 300 / Bold 700, 4xl-6xl): Hero headlines. Uses extreme contrast in weight (light phrasing next to bold, brightly colored keywords).
-- **Body** (Light 300, 15px): Standard text. Clean, unassuming, and highly legible.
+## Typographie
 
-## 4. Elevation
+- **Wordmark** Archivo `wdth 62 / wght 800`, ajusté au pixel près à la largeur du conteneur (hook `useFitText`), interligne 0.8.
+- **Display** Inter Tight 500, tracking −0.05em, interligne 0.92–1.
+- **Labels** Inter Tight 400, 11–12px, MAJUSCULES, souvent justifiés (`text-align-last: justify`) en blocs étroits.
+- **Chiffres géants** Inter Tight 500, bleu, rognés par le bord de la carte.
 
-Depth is "glassy and luminous." The system relies heavily on translucent backgrounds, backdrop blurs, and thin white borders rather than heavy, opaque drop shadows.
+## Composants
 
-### Shadow Vocabulary
-- **Glass Glow** (`box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25)`): Adds a subtle physical presence beneath translucent cards to lift them from the obsidian void.
+- **Carte encre** rayon 28px, ovale photo en haut à gauche + ✱ bleu, titre en haut à droite, filet horizontal, texte en bas à gauche, chiffre géant bleu rogné en bas à droite.
+- **Pilule CTA** pilule encre + rond bleu ↱ accolé. **Rond blanc** ↱ bleu pour les CTA isolés.
+- **Bande encre active** : liste de noms gris flous, l'élément actif devient une bande encre pleine largeur.
+- **Marquee** texte bleu majuscules + ✱, défilement CSS infini.
 
-### Named Rules
-**The Glass Light Rule.** Depth is created not through heavy shadows, but through luminous layers, glassmorphism, and translucent borders.
+## Mouvement
 
-## 5. Components
+Une entrée orchestrée au hero (lettres qui montent depuis un masque, personnage qui se défloute). Au scroll : titre qui se colore mot à mot, cartes services empilées (sticky), liste réalisations pilotée par le scroll. Lenis pour le défilement. Tout est désactivé sous `prefers-reduced-motion`.
 
-Components are distinctly tactile and smooth, inviting interaction.
+## À faire / à ne pas faire
 
-### Buttons
-- **Shape:** Pill-shaped, fully rounded (9999px).
-- **Primary:** Vitality Blue background with black text. Tactile and energetic.
-- **Hover:** Smooth, snappy transition with a subtle color shift and lift.
-
-### Cards / Containers
-- **Corner Style:** Heavily rounded (24px / 3xl).
-- **Background:** Barely-there translucent white (`rgba(255, 255, 255, 0.03)`).
-- **Shadow Strategy:** Luminous and glassy with strong backdrop-blur.
-- **Border:** Thin, delicate translucent white (`border-white/15`).
-
-### Inputs / Fields
-- **Style:** Pill-shaped or fully rounded, transparent or semi-transparent background with a delicate border.
-
-## 6. Do's and Don'ts
-
-### Do:
-- **Do** use purposeful motion and interactive elements to create dynamic vitality.
-- **Do** use `backdrop-blur` and translucent borders to build glassy, luminous layers.
-- **Do** use extreme font-weight contrast in headlines to create technical elegance.
-
-### Don't:
-- **Don't** make the site look like a random, "dead," AI-generated template.
-- **Don't** use identical card grids (same-sized cards repeated endlessly).
-- **Don't** use side-stripe borders greater than 1px as a colored accent.
-- **Don't** use gradient text combined with a gradient background.
+- Faire : accent bleu en grandes surfaces, filets 1px, petites capitales justifiées, chiffres géants rognés.
+- Ne pas faire : glassmorphism, halos colorés, dégradés de texte, cartes icône+titre identiques, mode clair/sombre basculable.

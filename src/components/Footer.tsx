@@ -1,109 +1,126 @@
-import { Instagram, Mail, Phone } from 'lucide-react';
+import { useRef, useState, type FormEvent } from 'react';
+import gsap from 'gsap';
+import { useGSAP } from '@gsap/react';
+import { ArrowCorner, Asterisk, CONTACT_EMAIL, CONTACT_PHONE, CONTACT_TEL, mailto, prefersReducedMotion, useFitText } from './ui';
+import { scrollToId } from './Navbar';
 
-const links = [
-  { label: 'Accueil', href: '#accueil' },
-  { label: 'Services', href: '#services' },
-  { label: 'Réalisations', href: '#realisations' },
-  { label: 'Contact', href: 'mailto:mamadousanogo352@gmail.com' },
+const row1 = [
+  { label: 'Services', id: 'services' },
+  { label: 'Réalisations', id: 'realisations' },
+  { label: 'Processus', id: 'processus' },
+  { label: 'Forfaits', id: 'forfaits' },
+];
+const row2 = [
+  { label: CONTACT_EMAIL, href: `mailto:${CONTACT_EMAIL}` },
+  { label: CONTACT_PHONE, href: CONTACT_TEL },
+  { label: 'Instagram', href: 'https://www.instagram.com/digi_craft.so/', external: true },
+  { label: 'TikTok', href: 'https://www.tiktok.com/@digicraft_so?_r=1&_t=ZS-95oRvXLj4Z2', external: true },
 ];
 
 export default function Footer() {
+  const container = useRef<HTMLElement>(null);
+  const wordRef = useFitText<HTMLDivElement>();
+  const [email, setEmail] = useState('');
+  const [error, setError] = useState('');
+
+  useGSAP(() => {
+    if (prefersReducedMotion()) return;
+    gsap.fromTo('.footer-letter', { yPercent: 100 }, {
+      yPercent: 0, duration: 1.3, stagger: 0.05, ease: 'expo.out',
+      scrollTrigger: { trigger: '.footer-word', start: 'top 95%' },
+    });
+  }, { scope: container });
+
+  const submit = (e: FormEvent) => {
+    e.preventDefault();
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) {
+      setError('Entrez une adresse email valide, par exemple nom@entreprise.com');
+      return;
+    }
+    setError('');
+    window.location.href = mailto(
+      'Demande de devis gratuit',
+      `Bonjour DigiCraft,\n\nJe souhaite recevoir un devis gratuit.\nMon email : ${email.trim()}\n\nMon projet en quelques mots :\n`
+    );
+  };
+
   return (
-    <footer id="contact" className="relative pt-20 pb-0 overflow-hidden border-t border-white/[0.07]">
+    <footer id="contact" data-nav="dark" ref={container} className="relative bg-ink text-white overflow-hidden">
+      {/* Anneau en filigrane */}
+      <div className="pointer-events-none absolute right-[4%] top-[34%] w-[min(52vw,620px)] aspect-square rounded-full border-[min(9vw,110px)] border-white/[0.022]" aria-hidden="true" />
 
-      {/* Ambient background */}
-      <div className="absolute inset-0 pointer-events-none z-0">
-        <div className="absolute inset-0 footer-glow" />
-        <div className="absolute inset-0 footer-mask" />
-      </div>
-
-      <div className="relative z-10 container mx-auto px-5 md:px-8 max-w-5xl">
-
-        {/* CTA block */}
-        <div className="text-center mb-16">
-          <h2 className="text-4xl sm:text-5xl md:text-6xl font-medium mb-5 leading-tight">
-            Prêt à façonner l'avenir<br className="hidden sm:block" /> avec DigiCraft ?
+      <div className="relative px-4 md:px-8 pt-20 md:pt-28">
+        <div className="flex items-center justify-between gap-6">
+          <h2 className="display text-[clamp(38px,5.4vw,80px)] leading-[0.95] max-w-[14em]">
+            Digitalisez avec clarté. Grandissez avec confiance.
           </h2>
-          <p className="text-gray-400 mb-8 max-w-md mx-auto text-[15px]">
-            Toutes les solutions digitales dont votre entreprise a besoin pour réussir.
-          </p>
-          <a
-            href="mailto:mamadousanogo352@gmail.com"
-            className="inline-flex items-center gap-2 bg-[#5eb1ff] text-black px-8 py-4 rounded-full font-medium hover:bg-white transition-colors duration-200"
-          >
-            Commencer maintenant
+          <a href={mailto()} aria-label="Démarrer un projet par email"
+            className="group shrink-0 w-[76px] h-[76px] md:w-[100px] md:h-[100px] rounded-full bg-[#f3f3f3] text-blue flex items-center justify-center transition-colors duration-300 hover:bg-blue hover:text-white">
+            <Asterisk className="w-[42%] h-[42%] transition-transform duration-700 ease-[cubic-bezier(.16,1,.3,1)] group-hover:rotate-[120deg]" />
           </a>
         </div>
 
-        {/* Divider */}
-        <div className="h-px bg-white/[0.07] mb-10" />
-
-        {/* Footer meta row */}
-        <div className="flex flex-col md:flex-row items-center justify-between gap-8 pb-10">
-
-          {/* Brand */}
-          <div className="flex flex-col items-center md:items-start text-center md:text-left">
-            <div className="mb-4">
-              <img src="/logo.png" alt="DigiCraft Logo" className="h-14 w-auto object-contain" />
-            </div>
-            <p className="text-[12px] text-gray-600">Agence digitale · Bamako, Mali</p>
+        <nav aria-label="Pied de page" className="mt-12 md:mt-16">
+          <div className="border-t border-white/[0.08] py-5 flex flex-wrap justify-between gap-x-8 gap-y-3">
+            {row1.map(l => (
+              <a key={l.id} href={`#${l.id}`} onClick={e => { e.preventDefault(); scrollToId(l.id); }} className="label text-white/55 hover:text-white transition-colors">{l.label}</a>
+            ))}
           </div>
-
-          {/* Links */}
-          <div className="flex flex-wrap justify-center gap-x-8 gap-y-2">
-            {links.map(l => (
-              <a key={l.label} href={l.href} className="text-sm text-gray-500 hover:text-white transition-colors duration-200">
+          <div className="border-t border-white/[0.08] py-5 flex flex-wrap justify-between gap-x-8 gap-y-3">
+            {row2.map(l => (
+              <a key={l.label} href={l.href} {...(l.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})} className={`label text-white/55 hover:text-white transition-colors ${l.label.includes('@') ? 'normal-case' : ''}`}>
                 {l.label}
               </a>
             ))}
           </div>
+        </nav>
 
-          {/* Contact + socials */}
-          <div className="flex items-center gap-3">
-            <a
-              href="tel:+22366699999"
-              className="w-9 h-9 rounded-full bg-white/[0.04] border border-white/10 flex items-center justify-center text-gray-500 hover:text-white hover:border-white/20 transition-all duration-200"
-              aria-label="Appeler"
-            >
-              <Phone className="w-3.5 h-3.5" />
-            </a>
-            <a
-              href="mailto:mamadousanogo352@gmail.com"
-              className="w-9 h-9 rounded-full bg-white/[0.04] border border-white/10 flex items-center justify-center text-gray-500 hover:text-white hover:border-white/20 transition-all duration-200"
-              aria-label="Email"
-            >
-              <Mail className="w-3.5 h-3.5" />
-            </a>
-            <a
-              href="https://www.instagram.com/digi_craft.so/"
-              className="w-9 h-9 rounded-full bg-white/[0.04] border border-white/10 flex items-center justify-center text-gray-500 hover:text-white hover:border-white/20 transition-all duration-200"
-              aria-label="Instagram"
-            >
-              <Instagram className="w-3.5 h-3.5" />
-            </a>
-            <a
-              href="https://www.tiktok.com/@digicraft_so?_r=1&_t=ZS-95oRvXLj4Z2"
-              className="w-9 h-9 rounded-full bg-white/[0.04] border border-white/10 flex items-center justify-center text-gray-500 hover:text-white hover:border-white/20 transition-all duration-200"
-              aria-label="TikTok"
-            >
-              <svg className="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24">
-                <path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 2.23-.9 4.49-2.5 6.04-1.68 1.63-4 2.5-6.36 2.37-2.61-.13-5.04-1.47-6.57-3.56-1.47-2.02-1.92-4.63-1.31-6.99.5-1.93 1.83-3.66 3.52-4.65 1.76-1.03 3.86-1.34 5.86-.98v4.22c-1.46-.35-3.08-.22-4.32.61-1.07.72-1.74 1.95-1.78 3.25-.04 1.34.56 2.67 1.56 3.52 1.05.89 2.52 1.22 3.87.97 1.65-.3 3.01-1.6 3.39-3.23.16-.67.24-1.37.24-2.07V.02z" />
-              </svg>
-            </a>
+        <div className="mt-14 md:mt-24 pb-16 md:pb-24 grid grid-cols-1 md:grid-cols-12 gap-12">
+          <div className="md:col-span-5">
+            <p className="text-[15px] uppercase tracking-[-0.02em] leading-[1.3] max-w-[22em]">Recevez un devis gratuit sous 24h pour votre projet digital.</p>
+            <form onSubmit={submit} noValidate className="mt-6">
+              <div className="flex items-center bg-[#f3f3f3] rounded-full h-12 pl-5 pr-1.5 max-w-[400px] outline-2 outline-offset-2 outline-transparent focus-within:outline-blue-soft transition-[outline-color]">
+                <label htmlFor="footer-email" className="sr-only">Votre adresse email</label>
+                <input
+                  id="footer-email"
+                  type="email"
+                  inputMode="email"
+                  autoComplete="email"
+                  value={email}
+                  onChange={e => { setEmail(e.target.value); if (error) setError(''); }}
+                  placeholder="Votre adresse email"
+                  aria-invalid={!!error}
+                  aria-describedby={error ? 'footer-email-error' : 'footer-email-hint'}
+                  className="flex-1 min-w-0 bg-transparent text-[15px] text-text placeholder:text-muted focus:outline-none"
+                />
+                <button type="submit" aria-label="Envoyer ma demande de devis" className="w-9 h-9 rounded-full flex items-center justify-center text-ink hover:bg-blue hover:text-white transition-colors">
+                  <ArrowCorner className="w-4 h-4" />
+                </button>
+              </div>
+              {error
+                ? <p id="footer-email-error" className="label text-[#ff8a8a] mt-3">{error}</p>
+                : <p id="footer-email-hint" className="label text-white/45 mt-4 max-w-[400px]">En envoyant votre email, votre messagerie s’ouvre avec une demande de devis prête à partir. Nous répondons sous 24h.</p>}
+            </form>
           </div>
-        </div>
-
-        {/* Copyright */}
-        <div className="pb-6 text-center text-[12px] text-gray-700">
-          © 2026 DigiCraft. Tous droits réservés.
+          <div className="md:col-span-4 md:col-start-9 flex flex-col justify-between gap-10">
+            <div>
+              <img src="/logo-dark.webp" alt="DigiCraft — Solutions digitales" width={344} height={78} loading="lazy" className="h-12 w-auto mb-5" />
+              <p className="label text-white/85">Conçu à Bamako, pour l’Afrique et au-delà.</p>
+            </div>
+            <p className="label text-white/45 max-w-[120px]">© {new Date().getFullYear()} DigiCraft. Tous droits réservés.</p>
+          </div>
         </div>
       </div>
 
-      {/* Large background wordmark */}
-      <div className="w-full overflow-hidden leading-none select-none pointer-events-none flex justify-center opacity-[0.04] -mt-4 relative z-0">
-        <span className="text-[22vw] font-black tracking-tighter text-white whitespace-nowrap translate-y-[15%]">
-          DIGICRAFT
-        </span>
+      {/* Wordmark géant coupé */}
+      <div className="footer-word relative border-t border-white/[0.08] px-4 md:px-8 pt-4 md:pt-6 h-[13vw] min-h-[60px] overflow-hidden">
+        <div ref={wordRef} className="wordmark text-blue select-none w-max" aria-hidden="true" style={{ fontSize: '19vw' }}>
+          {'DIGICRAFT'.split('').map((l, i) => (
+            <span key={i} className="inline-block overflow-hidden align-top">
+              <span className="footer-letter inline-block">{l}</span>
+            </span>
+          ))}
+        </div>
       </div>
     </footer>
   );

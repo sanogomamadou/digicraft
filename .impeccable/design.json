@@ -1,0 +1,23 @@
+{
+  "name": "DigiCraft",
+  "colors": {
+    "blue": "#086EBA",
+    "blueSoft": "#5CB6F9",
+    "logoNavy": "#04092F",
+    "ink": "#0B1022",
+    "ink2": "#141A31",
+    "paper": "#EFEFEF",
+    "heroTop": "#A3A8AD",
+    "text": "#0E1328",
+    "muted": "#565C6C",
+    "ghost": "#7F8592"
+  },
+  "fonts": {
+    "wordmark": "Archivo wdth62 wght800",
+    "text": "Inter Tight 300-600"
+  },
+  "radius": {
+    "card": 28,
+    "pill": 9999
+  }
+}

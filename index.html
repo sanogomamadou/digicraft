@@ -4,50 +4,59 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- Signale que JS est actif : le CSS pose l'état de départ des animations du hero (évite un flash) -->
+  <script>document.documentElement.classList.add('js')</script>
 
   <!-- DNS Prefetch & Preconnect pour Google Fonts (non-bloquant) -->
   <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
   <link rel="dns-prefetch" href="https://fonts.gstatic.com" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <!-- Chargement non-bloquant de la font Outfit avec font-display=swap -->
+  <!-- Chargement non-bloquant : Archivo (wordmark condensé) + Inter Tight (texte) -->
   <link
     rel="preload"
     as="style"
-    href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..100,700..900&amp;family=Inter+Tight:wght@300..600&amp;display=swap"
     onload="this.onload=null;this.rel='stylesheet'"
   />
   <noscript>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..100,700..900&amp;family=Inter+Tight:wght@300..600&amp;display=swap" />
   </noscript>
 
   <!-- Primary Meta Tags -->
-  <title>DigiCraft | Agence Digitale & IA au Mali - Web & SaaS</title>
-  <meta name="title" content="DigiCraft | Agence Digitale & IA au Mali - Web & SaaS" />
+  <title>DigiCraft | Agence digitale à Bamako : sites web, SaaS &amp; IA</title>
+  <meta name="title" content="DigiCraft | Agence digitale à Bamako : sites web, SaaS &amp; IA" />
   <meta name="description"
-    content="Propulsez votre entreprise avec DigiCraft, l'agence digitale experte au Mali. Création de sites web, applications SaaS, ingénierie de données et intégration d'Intelligence Artificielle sur-mesure." />
+    content="Agence digitale à Bamako : sites web, e-commerce, logiciels SaaS (ClinixPro, eDjago), agents IA et automatisation pour les PME d’Afrique de l’Ouest. Devis gratuit sous 24h." />
   <meta name="keywords"
-    content="agence digitale Mali, création site web Bamako, développement SaaS, intégration IA Mali, intelligence artificielle Afrique, agence web Afrique de l'Ouest, automatisation IA, data science, DigiCraft" />
+    content="agence digitale Mali, agence web Bamako, création site web Bamako, site e-commerce Mali, développement SaaS, logiciel gestion clinique, logiciel caisse boutique, chatbot IA, agent IA, automatisation n8n, agence web Afrique de l'Ouest, DigiCraft" />
   <meta name="author" content="DigiCraft" />
-  <meta name="robots" content="index, follow" />
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
   <meta name="language" content="French" />
   <link rel="canonical" href="https://digicraftso.com/" />
+  <link rel="alternate" type="text/markdown" href="https://digicraftso.com/llms.txt" title="Résumé du site pour les IA" />
 
   <!-- Open Graph / Facebook -->
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://digicraftso.com/" />
-  <meta property="og:title" content="DigiCraft | Agence Digitale & IA au Mali - Web & SaaS" />
+  <meta property="og:title" content="DigiCraft | Agence digitale à Bamako : sites web, SaaS &amp; IA" />
   <meta property="og:description"
-    content="Propulsez votre entreprise avec DigiCraft, l'agence digitale experte au Mali. Création de sites web, applications SaaS, Data et Intelligence Artificielle." />
-  <meta property="og:image" content="https://digicraftso.com/logo.png" />
+    content="Agence digitale à Bamako : sites web, e-commerce, logiciels SaaS (ClinixPro, eDjago), agents IA et automatisation pour les PME d’Afrique de l’Ouest. Devis gratuit sous 24h." />
+  <meta property="og:image" content="https://digicraftso.com/og-image.jpg" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt" content="DigiCraft, agence digitale à Bamako : Vendez plus. Gérez mieux." />
+  <meta property="og:site_name" content="DigiCraft" />
+  <meta property="og:locale" content="fr_FR" />
 
   <!-- Twitter -->
   <meta property="twitter:card" content="summary_large_image" />
   <meta property="twitter:url" content="https://digicraftso.com/" />
-  <meta property="twitter:title" content="DigiCraft | Agence Digitale & IA au Mali - Web & SaaS" />
+  <meta property="twitter:title" content="DigiCraft | Agence digitale à Bamako : sites web, SaaS &amp; IA" />
   <meta property="twitter:description"
-    content="Propulsez votre entreprise avec DigiCraft, l'agence digitale experte au Mali. Création de sites web, applications SaaS, Data et Intelligence Artificielle." />
-  <meta property="twitter:image" content="https://digicraftso.com/logo.png" />
+    content="Agence digitale à Bamako : sites web, e-commerce, logiciels SaaS (ClinixPro, eDjago), agents IA et automatisation pour les PME d’Afrique de l’Ouest. Devis gratuit sous 24h." />
+  <meta property="twitter:image" content="https://digicraftso.com/og-image.jpg" />
+  <meta property="twitter:image:alt" content="DigiCraft, agence digitale à Bamako : Vendez plus. Gérez mieux." />
 
   <!-- Favicon -->
   <link rel="icon" href="/favicon.ico" sizes="any" />
@@ -57,7 +66,144 @@
   <link rel="shortcut icon" href="/favicon.ico" />
 
   <!-- Theme Color -->
-  <meta name="theme-color" content="#000000" />
+  <meta name="theme-color" content="#A3A8AD" />
+
+  <!-- Données structurées (Google, Bing, moteurs IA) -->
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "ProfessionalService",
+      "@id": "https://digicraftso.com/#organization",
+      "name": "DigiCraft",
+      "alternateName": "DigiCraft Solutions Digitales",
+      "url": "https://digicraftso.com/",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://digicraftso.com/logo.png",
+        "width": 500,
+        "height": 500
+      },
+      "image": "https://digicraftso.com/og-image.jpg",
+      "description": "Agence digitale basée à Bamako (Mali) : sites web, e-commerce, applications web et mobiles, logiciels SaaS, chatbots et agents IA, automatisation, design graphique et analyse de données pour les PME d’Afrique de l’Ouest.",
+      "email": "contact@digicraftso.com",
+      "telephone": "+223 66 69 99 99",
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "Bamako",
+        "addressCountry": "ML"
+      },
+      "areaServed": [
+        {
+          "@type": "Country",
+          "name": "Mali"
+        },
+        {
+          "@type": "Place",
+          "name": "Afrique de l’Ouest"
+        }
+      ],
+      "openingHoursSpecification": {
+        "@type": "OpeningHoursSpecification",
+        "dayOfWeek": [
+          "Monday",
+          "Tuesday",
+          "Wednesday",
+          "Thursday",
+          "Friday"
+        ],
+        "opens": "08:00",
+        "closes": "18:00"
+      },
+      "priceRange": "150 000 FCFA – sur devis",
+      "currenciesAccepted": "XOF",
+      "paymentAccepted": "Wave, Orange Money, Moov Money, virement bancaire",
+      "sameAs": [
+        "https://www.instagram.com/digi_craft.so/",
+        "https://www.tiktok.com/@digicraft_so"
+      ],
+      "knowsAbout": [
+        "Création de sites web",
+        "E-commerce",
+        "Applications SaaS",
+        "Applications mobiles",
+        "Chatbots IA",
+        "Agents IA",
+        "Automatisation n8n",
+        "Design graphique",
+        "Analyse de données"
+      ],
+      "hasOfferCatalog": {
+        "@type": "OfferCatalog",
+        "name": "Forfaits DigiCraft",
+        "itemListElement": [
+          {
+            "@type": "Offer",
+            "name": "Forfait Starter",
+            "description": "Site vitrine responsive, design personnalisé, SEO de base, formulaire de contact, support technique 1 mois.",
+            "priceSpecification": {
+              "@type": "PriceSpecification",
+              "minPrice": 150000,
+              "priceCurrency": "XOF"
+            }
+          },
+          {
+            "@type": "Offer",
+            "name": "Forfait Pro",
+            "description": "Site e-commerce ou application web complète, intégration CMS, automatisations de base, tableau de bord analytique, support technique 3 mois.",
+            "priceSpecification": {
+              "@type": "PriceSpecification",
+              "minPrice": 450000,
+              "priceCurrency": "XOF"
+            }
+          },
+          {
+            "@type": "Offer",
+            "name": "Forfait Enterprise",
+            "description": "Application SaaS sur-mesure, agents IA avancés, analyse de données avancée, infrastructure cloud dédiée, support prioritaire 24/7. Sur devis."
+          }
+        ]
+      },
+      "makesOffer": [
+        {
+          "@type": "Offer",
+          "itemOffered": {
+            "@type": "SoftwareApplication",
+            "name": "ClinixPro",
+            "applicationCategory": "BusinessApplication",
+            "url": "https://clinixpro.digicraftso.com/",
+            "description": "Logiciel SaaS de gestion de clinique : dossiers patients, rendez-vous, ordonnances, pharmacie et caisse."
+          }
+        },
+        {
+          "@type": "Offer",
+          "itemOffered": {
+            "@type": "SoftwareApplication",
+            "name": "eDjago",
+            "applicationCategory": "BusinessApplication",
+            "url": "https://edjago.digicraftso.com/decouvrir",
+            "description": "Caisse et gestion de boutique, même sans internet : ventes, stock, crédits clients et fournisseurs."
+          }
+        }
+      ]
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://digicraftso.com/#website",
+      "url": "https://digicraftso.com/",
+      "name": "DigiCraft",
+      "inLanguage": "fr",
+      "publisher": {
+        "@id": "https://digicraftso.com/#organization"
+      }
+    }
+  ]
+}
+  </script>
+
+  <!-- Image hero préchargée (LCP) -->
+  <link rel="preload" as="image" href="/hero/hero.webp" type="image/webp" fetchpriority="high" />
 
 </head>
 

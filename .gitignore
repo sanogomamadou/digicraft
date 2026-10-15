@@ -6,3 +6,8 @@ coverage/
 *.log
 .env*
 !.env.example
+
+# Sources des images (originaux générés, non déployés)
+assets-src/
+dist-ssr/
+.playwright-mcp/

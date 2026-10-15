@@ -4,18 +4,20 @@
  */
 
 import { useEffect, lazy, Suspense } from 'react';
+import Lenis from 'lenis';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
+import { prefersReducedMotion } from './components/ui';
 
 // Lazy loading de toutes les sections non-critiques (sous le fold)
-// Elles sont téléchargées en arrière-plan après le chargement du hero
-const CollaborativeAgents = lazy(() => import('./components/CollaborativeAgents'));
-const Features = lazy(() => import('./components/Features'));
+const Services = lazy(() => import('./components/Services'));
+const TextMarquee = lazy(() => import('./components/Marquee').then(m => ({ default: m.TextMarquee })));
+const CtaMarquee = lazy(() => import('./components/Marquee').then(m => ({ default: m.CtaMarquee })));
+const Work = lazy(() => import('./components/Work'));
+const Reviews = lazy(() => import('./components/Reviews'));
 const Action = lazy(() => import('./components/Action'));
-const Projects = lazy(() => import('./components/Projects'));
-const Steps = lazy(() => import('./components/Steps'));
+const Process = lazy(() => import('./components/Process'));
 const Pricing = lazy(() => import('./components/Pricing'));
-const Testimonials = lazy(() => import('./components/Testimonials'));
 const Footer = lazy(() => import('./components/Footer'));
 const Chatbot = lazy(() => import('./components/Chatbot'));
 
@@ -27,35 +29,51 @@ gsap.registerPlugin(ScrollTrigger, useGSAP);
 
 export default function App() {
   useEffect(() => {
-    // Disable browser's automatic scroll restoration
-    if ('scrollRestoration' in history) {
-      history.scrollRestoration = 'manual';
-    }
-    // Force scroll to top
+    if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
     window.scrollTo(0, 0);
+
+    // Défilement fluide (désactivé si l'utilisateur préfère moins d'animations)
+    if (prefersReducedMotion()) return;
+    // allowNestedScroll : une zone interne (chat) ne prend la main que si elle peut encore défiler
+    const lenis = new Lenis({ duration: 1.15, easing: t => 1 - Math.pow(1 - t, 4), allowNestedScroll: true });
+    (window as unknown as { __lenis?: Lenis }).__lenis = lenis;
+    lenis.on('scroll', ScrollTrigger.update);
+    const raf = (time: number) => lenis.raf(time * 1000);
+    gsap.ticker.add(raf);
+    gsap.ticker.lagSmoothing(0);
+
+    // Les sections lazy changent la hauteur de page : on recalcule les déclencheurs
+    const ro = new ResizeObserver(() => ScrollTrigger.refresh());
+    ro.observe(document.body);
+
+    return () => {
+      ro.disconnect();
+      gsap.ticker.remove(raf);
+      lenis.destroy();
+      delete (window as unknown as { __lenis?: Lenis }).__lenis;
+    };
   }, []);
 
   return (
-    <div className="min-h-screen text-white font-sans selection:bg-[#5eb1ff]/30 overflow-x-hidden">
+    <div className="min-h-screen bg-paper text-text font-sans overflow-x-clip">
       <Navbar />
       <main>
         {/* Hero chargé immédiatement — critique pour le LCP */}
         <Hero />
-        {/* Sections chargées en lazy — visibles seulement en scrollant */}
         <Suspense fallback={null}>
-          <CollaborativeAgents />
-          <Features />
+          <Services />
+          <TextMarquee />
+          <Work />
+          <CtaMarquee />
+          <Reviews />
           <Action />
-          <Projects />
-          <Steps />
+          <Process />
           <Pricing />
-          <Testimonials />
         </Suspense>
       </main>
       <Suspense fallback={null}>
         <Footer />
       </Suspense>
-      {/* Chatbot en dernier — chargé uniquement quand le reste est prêt */}
       <Suspense fallback={null}>
         <Chatbot />
       </Suspense>

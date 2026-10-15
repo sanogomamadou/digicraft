@@ -2,136 +2,140 @@
 @import "tailwindcss";
 
 @theme {
-  --font-sans: "Outfit", ui-sans-serif, system-ui, sans-serif;
-}
+  --font-sans: "Inter Tight", ui-sans-serif, system-ui, sans-serif;
+  --font-wordmark: "Archivo", "Arial Narrow", sans-serif;
 
-:root {
-  /* Deep Obsidian tinted with Vitality Blue */
-  --color-background: #020611;
-  /* Surface Dark tinted */
-  --color-surface: #060e20;
-  /* Surface Light tinted */
-  --color-surface-light: #0d1a36;
-  --color-border: rgba(94, 177, 255, 0.15);
-  --map-mali: #0d1a36;
-  --map-neighbor: #060e20;
-  --map-world: #1e3a8a;
+  --color-blue: #086eba;
+  --color-blue-soft: #5cb6f9;
+  --color-ink: #0b1022;
+  --color-ink-2: #141a31;
+  --color-paper: #efefef;
+  --color-text: #0e1328;
+  --color-muted: #565c6c;
+  --color-ghost: #7f8592;
 }
 
 html {
-  scroll-behavior: smooth;
-}
-
-html.light {
-  --color-background: #f9fafb;
-  --color-surface: #ffffff;
-  --color-surface-light: #f3f4f6;
-  --color-border: rgba(0, 0, 0, 0.1);
-  --map-mali: #3b82f6;      
-  --map-neighbor: #bfdbfe;  
-  --map-world: #e5e7eb;     
+  background: var(--color-paper);
+  -webkit-text-size-adjust: 100%;
 }
 
 body {
-  background-color: var(--color-background);
-  color: white;
-  transition: background-color 0.4s ease, color 0.4s ease;
+  background: var(--color-paper);
+  color: var(--color-text);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
 }
 
-/* --- Mode Clair (Light Mode) Global Overrides --- */
-html.light body { color: #111827 !important; }
-html.light ::selection { background-color: rgba(94, 177, 255, 0.3) !important; color: inherit; }
-
-/* Backgrounds */
-html.light .bg-black { background-color: var(--color-surface) !important; }
-html.light .bg-\[\#050505\] { background-color: var(--color-background) !important; }
-html.light .bg-\[\#060e20\] { background-color: var(--color-surface) !important; }
-html.light .bg-\[\#0a0a0a\], html.light .bg-\[\#1a1a1a\] { background-color: var(--color-surface-light) !important; }
-html.light .bg-black\/50 { background-color: rgba(255, 255, 255, 0.7) !important; border-color: rgba(94, 177, 255, 0.1) !important; }
-html.light .bg-black\/90, html.light .bg-black\/95 { background-color: rgba(255, 255, 255, 0.95) !important; }
-html.light .bg-black\/40 { background-color: rgba(94, 177, 255, 0.05) !important; }
-html.light .bg-black\/60 { background-color: rgba(255, 255, 255, 0.8) !important; color: #111827 !important; border-color: rgba(94, 177, 255, 0.1) !important; }
-
-/* Translucent surfaces (Glassmorphism) */
-html.light .bg-white\/5 { background-color: rgba(0, 0, 0, 0.03) !important; }
-html.light .bg-white\/10 { background-color: rgba(0, 0, 0, 0.06) !important; }
-html.light .bg-white\/\[0\.02\] { background-color: rgba(0, 0, 0, 0.015) !important; }
-html.light .bg-white\/\[0\.03\] { background-color: rgba(0, 0, 0, 0.02) !important; }
-html.light .bg-\[rgba\(255\,255\,255\,0\.03\)\] { background-color: rgba(0, 0, 0, 0.03) !important; }
-html.light .hover\:bg-white\/5:hover { background-color: rgba(0, 0, 0, 0.06) !important; }
-html.light .hover\:bg-white\/10:hover { background-color: rgba(0, 0, 0, 0.09) !important; }
-html.light .hover\:bg-\[\#111111\]:hover { background-color: rgba(0, 0, 0, 0.06) !important; }
-html.light .group:hover .group-hover\:bg-black\/10 { background-color: rgba(255, 255, 255, 0.4) !important; }
-
-/* Text Colors */
-html.light .text-white, html.light .text-white\/95, html.light .text-white\/90 { color: #111827 !important; }
-html.light .text-white\/70 { color: #374151 !important; }
-html.light .text-white\/60, html.light .text-gray-400 { color: #4b5563 !important; }
-html.light .text-white\/50, html.light .text-gray-500 { color: #6b7280 !important; }
-html.light .text-gray-300 { color: #4b5563 !important; }
-html.light .text-gray-200 { color: #374151 !important; }
-html.light .text-\[\#1a1a1a\] { color: rgba(0,0,0,0.04) !important; }
-html.light .text-white\/10 { color: rgba(0,0,0,0.06) !important; }
-html.light .text-\[\#050505\] { color: #000000 !important; }
-html.light .text-\[\#050505\]\/80 { color: rgba(0,0,0,0.8) !important; }
-html.light .text-\[\#050505\]\/70 { color: rgba(0,0,0,0.7) !important; }
-html.light .text-\[\#050505\]\/60 { color: rgba(0,0,0,0.6) !important; }
-html.light .hover\:text-white:hover { color: #000000 !important; }
-html.light .group:hover .group-hover\:text-\[\#5eb1ff\] { color: #0066cc !important; }
-
-/* Borders */
-html.light .border-white\/10, html.light .border-white\/15 { border-color: rgba(0, 0, 0, 0.1) !important; }
-html.light .border-white\/20, html.light .border-white\/30 { border-color: rgba(0, 0, 0, 0.15) !important; }
-
-/* Brand Colors Fixes */
-html.light .bg-\[\#5eb1ff\] { color: #000000 !important; }
-html.light .text-\[\#5eb1ff\] { color: #0066cc !important; }
-html.light .border-\[\#5eb1ff\]\/50 { border-color: rgba(0, 102, 204, 0.5) !important; }
-html.light .border-\[\#5eb1ff\]\/30 { border-color: rgba(0, 102, 204, 0.3) !important; }
-html.light .fill-\[\#5eb1ff\] { fill: #0066cc !important; }
-html.light .stroke-\[\#5eb1ff\] { stroke: #0066cc !important; }
-
-/* SVGs & Graphics */
-html.light .stroke-white { stroke: rgba(0,0,0,0.6) !important; }
-html.light circle[fill="#0a0a0a"] { fill: #ffffff !important; }
-html.light .mix-blend-screen { mix-blend-mode: multiply !important; opacity: 0.6 !important; }
-
-/* Gradients Breakdown */
-html.light .from-black { --tw-gradient-from: #ffffff var(--tw-gradient-from-position) !important; --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to) !important; }
-html.light .via-black\/80 { --tw-gradient-via: rgba(255, 255, 255, 0.8) var(--tw-gradient-via-position) !important; --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-via), var(--tw-gradient-to) !important; }
-html.light .via-black\/60 { --tw-gradient-via: rgba(255, 255, 255, 0.6) var(--tw-gradient-via-position) !important; --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-via), var(--tw-gradient-to) !important; }
-
-html.light .from-white\/70 { --tw-gradient-from: rgba(0,0,0,0.08) var(--tw-gradient-from-position) !important; --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to) !important; }
-html.light .to-white\/0 { --tw-gradient-to: rgba(0,0,0,0) var(--tw-gradient-to-position) !important; }
-
-/* Pricing gradients styling */
-html.light .to-\[\#0a1930\] { --tw-gradient-to: rgba(59, 130, 246, 0.1) var(--tw-gradient-to-position) !important; }
-html.light .to-\[\#0a1930\]\/20 { --tw-gradient-to: rgba(59, 130, 246, 0.05) var(--tw-gradient-to-position) !important; }
-html.light .from-\[\#0a1930\]\/40 { --tw-gradient-from: rgba(59, 130, 246, 0.1) var(--tw-gradient-from-position) !important; --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to) !important; }
-html.light .to-\[\#0a1930\]\/60 { --tw-gradient-to: rgba(59, 130, 246, 0.15) var(--tw-gradient-to-position) !important; }
-html.light .via-\[\#0a1930\]\/60 { --tw-gradient-via: rgba(59, 130, 246, 0.15) var(--tw-gradient-via-position) !important; --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-via), var(--tw-gradient-to) !important; }
-html.light .from-\[\#0a1930\]\/60 { --tw-gradient-from: rgba(59, 130, 246, 0.15) var(--tw-gradient-from-position) !important; --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to) !important; }
-
-/* Others */
-html.light .bg-gray-700 { background-color: #e5e7eb !important; }
-
-/* Custom Footer Gradients */
-.footer-glow {
-  background: linear-gradient(to right, rgba(10, 25, 48, 0.6), rgba(94, 177, 255, 0.6), rgba(10, 25, 48, 0.6));
-}
-.footer-mask {
-  background: linear-gradient(to bottom, #000000 0%, rgba(0, 0, 0, 0.6) 60%, transparent 100%);
-}
-.footer-text-bg {
-  background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0.7), transparent);
+::selection {
+  background: var(--color-blue);
+  color: #fff;
 }
 
-html.light .footer-glow {
-  background: linear-gradient(to right, rgba(94, 177, 255, 0.1), rgba(94, 177, 255, 0.7), rgba(94, 177, 255, 0.1));
+@layer base {
+  :focus-visible {
+    outline: 2px solid var(--color-blue);
+    outline-offset: 3px;
+  }
 }
-html.light .footer-mask {
-  background: linear-gradient(to bottom, #ffffff 0%, rgba(255, 255, 255, 0.7) 60%, transparent 100%);
+
+/* Hero : état de départ des animations, posé avant l'hydratation pour éviter un flash
+   du contenu pré-généré. Uniquement si JS est actif (classe .js) et animations acceptées. */
+@media (prefers-reduced-motion: no-preference) {
+  .js .hero-letter { transform: translateY(105%); }
+  .js .hero-line { transform: translateY(110%); }
+  .js .hero-person { opacity: 0; }
+  .js .hero-label, .js .hero-proof { opacity: 0; }
+  .js .hero-cta { transform: scale(0); }
 }
-html.light .footer-text-bg {
-  background-image: linear-gradient(to bottom, rgba(94, 177, 255, 1), transparent);
+
+/* Lenis */
+html.lenis, html.lenis body { height: auto; }
+.lenis.lenis-smooth { scroll-behavior: auto !important; }
+.lenis.lenis-stopped { overflow: hidden; }
+
+/* ---------- Atoms ---------- */
+
+/* Wordmark condensé */
+.wordmark {
+  font-family: var(--font-wordmark);
+  font-variation-settings: "wdth" 62;
+  font-stretch: 62%;
+  font-weight: 800;
+  line-height: 0.8;
+  letter-spacing: -0.035em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+/* Petites capitales */
+.label {
+  font-size: 11.5px;
+  line-height: 1.3;
+  letter-spacing: -0.005em;
+  text-transform: uppercase;
+  font-weight: 400;
+}
+
+/* Bloc de petites capitales justifié, comme « TRUSTED   BY   RUNNERS » */
+.label-justify {
+  text-align: justify;
+  text-align-last: left;
+  text-justify: inter-word;
+}
+.label-justify::first-line { word-spacing: 0.4em; }
+
+.display {
+  font-weight: 500;
+  letter-spacing: -0.05em;
+  line-height: 0.95;
+}
+
+.tight { letter-spacing: -0.04em; }
+
+/* Masque de révélation ligne par ligne */
+.reveal-mask { display: block; overflow: hidden; padding-bottom: 0.08em; margin-bottom: -0.08em; }
+
+/* ---------- Marquee ---------- */
+.marquee {
+  display: flex;
+  width: max-content;
+  animation: marquee var(--marquee-duration, 30s) linear infinite;
+}
+.marquee-reverse { animation-direction: reverse; }
+.marquee-host:hover .marquee-pausable { animation-play-state: paused; }
+@keyframes marquee {
+  from { transform: translate3d(0, 0, 0); }
+  to { transform: translate3d(-50%, 0, 0); }
+}
+
+/* ---------- Scrollbars ---------- */
+.no-scrollbar { scrollbar-width: none; }
+.no-scrollbar::-webkit-scrollbar { display: none; }
+
+@keyframes navIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: none; }
+}
+
+@keyframes bandIn {
+  from { transform: translateY(105%); }
+  to { transform: none; }
+}
+
+@keyframes digiBounce {
+  0%, 80%, 100% { transform: translateY(0); opacity: 0.4; }
+  40% { transform: translateY(-5px); opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .marquee { animation: none; }
+  /* « none » et pas une durée minuscule : une transition de 0.01ms sur `all` animait aussi
+     font-size et faussait les mesures synchrones (ajustement du wordmark en boucle). */
+  *, *::before, *::after {
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
 }

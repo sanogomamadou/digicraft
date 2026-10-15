@@ -1,0 +1,45 @@
+# DigiCraft
+
+> Agence digitale basée à Bamako (Mali). DigiCraft conçoit des sites web, des boutiques e-commerce, des applications web et mobiles, des logiciels SaaS, des chatbots et agents IA et des automatisations pour les PME d'Afrique de l'Ouest. Devis gratuit sous 24h.
+
+- Site : https://digicraftso.com/
+- Email : contact@digicraftso.com
+- Téléphone : +223 66 69 99 99
+- Localisation : Bamako, Mali (interventions à distance en Afrique et dans le monde)
+- Paiements acceptés : Wave, Orange Money, Moov Money, virement bancaire
+
+## Services
+
+- Sites web vitrine : à partir de 150 000 FCFA, livrés en 1 à 2 semaines
+- Applications web simples (outils métiers, prise de rendez-vous) : à partir de 300 000 FCFA, 3 à 8 semaines
+- Applications mobiles iOS et Android : à partir de 500 000 FCFA, 6 à 16 semaines
+- Applications desktop (caisse, stock, ERP, CRM) : à partir de 300 000 FCFA, 4 à 10 semaines
+- Chatbots et agents IA (WhatsApp, site web, Messenger) : à partir de 75 000 FCFA, 1 à 4 semaines
+- Automatisations (n8n, Make, Zapier) : à partir de 10 000 FCFA par mois, abonnement avec engagement
+- Applications SaaS sur-mesure : sur devis (conception à coût réduit puis abonnement mensuel sous contrat)
+- Design graphique (logos, chartes, flyers, réseaux sociaux) : à partir de 10 000 FCFA, 2 à 7 jours
+- Analyse de données et tableaux de bord : sur devis
+
+## Forfaits
+
+- Starter, à partir de 150 000 FCFA : site vitrine responsive, design personnalisé, SEO de base, formulaire de contact, support 1 mois
+- Pro, à partir de 450 000 FCFA : site e-commerce ou application web complète, CMS, automatisations de base, tableau de bord analytique, support 3 mois
+- Enterprise, sur devis : SaaS sur-mesure, agents IA avancés, analyse de données avancée, infrastructure cloud dédiée, support prioritaire 24/7
+
+## Logiciels DigiCraft
+
+- [ClinixPro](https://clinixpro.digicraftso.com/) : logiciel SaaS de gestion de clinique (dossiers patients, rendez-vous, ordonnances, pharmacie, caisse)
+- [eDjago](https://edjago.digicraftso.com/decouvrir) : caisse et gestion de boutique, même sans internet
+
+## Réalisations
+
+- [ClinixPro](https://clinixpro.digicraftso.com/) : SaaS de gestion de clinique, conçu et édité par DigiCraft
+- [eDjago](https://edjago.digicraftso.com/decouvrir) : SaaS de caisse et gestion de boutique, produit DigiCraft
+- [OG Shop](https://ogshop.digicraftso.com/) : boutique e-commerce d'une enseigne de sneakers à Bamako
+- [H2 Design](https://h2designml.com/) : site vitrine d'une entreprise d'architecture et de construction (Mali, Guinée, Côte d'Ivoire)
+- [TAT Mali](https://tatmali.vercel.app/) : landing page de la tomate concentrée TAT pour BMK Group
+- Lead Engine : automatisation n8n de génération de leads pour un cabinet de recrutement (projet confidentiel)
+
+## Démarrer un projet
+
+Écrire à contact@digicraftso.com en décrivant le projet. Réponse sous 24h, consultation gratuite (en ligne ou à Bamako), puis devis gratuit et personnalisé. Paiement habituel : 50 % au démarrage, 50 % à la livraison.

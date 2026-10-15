@@ -1,10 +1,16 @@
 import {StrictMode} from 'react';
-import {createRoot} from 'react-dom/client';
+import {createRoot, hydrateRoot} from 'react-dom/client';
 import App from './App.tsx';
 import './index.css';
 
-createRoot(document.getElementById('root')!).render(
+const container = document.getElementById('root')!;
+const app = (
   <StrictMode>
     <App />
-  </StrictMode>,
+  </StrictMode>
 );
+
+// En production, le HTML est pré-généré au build (scripts/prerender.mjs) : on l'hydrate.
+// En développement, la page arrive vide : rendu classique.
+if (container.hasChildNodes()) hydrateRoot(container, app);
+else createRoot(container).render(app);

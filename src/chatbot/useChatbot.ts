@@ -64,12 +64,18 @@ export function useChatbot() {
         }
 
         // Read the full text response (non-streaming, compatible with Vercel Serverless)
-        const fullContent = await response.text();
+        const fullContent = (await response.text())?.trim();
+        // Une réponse vide est une panne, pas une réponse : on affiche l'état d'erreur
+        if (!fullContent) {
+          setStreamingContent('');
+          setStatus('error');
+          return;
+        }
 
         const assistantMsg: ChatMessage = {
           id: `assistant-${Date.now()}`,
           role: 'assistant',
-          content: fullContent?.trim() || 'Je suis désolé, je n\'ai pas pu générer une réponse.',
+          content: fullContent,
           timestamp: new Date(),
         };
 

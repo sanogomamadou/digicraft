@@ -1,208 +1,135 @@
 import { useRef } from 'react';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
-import { Bot, TrendingUp, ArrowUpRight } from 'lucide-react';
+import { Asterisk, CircleArrow, mailto, prefersReducedMotion, useFitText } from './ui';
+import Avatar from './Avatar';
+import { testimonials } from '../content';
 
-// Détecte si on est sur un appareil mobile/connexion lente
-const isMobile = () => typeof window !== 'undefined' && window.innerWidth < 768;
+const WORD = 'DIGICRAFT';
 
 export default function Hero() {
   const container = useRef<HTMLElement>(null);
+  const wordRef = useFitText<HTMLDivElement>();
 
   useGSAP(() => {
-    const mobile = isMobile();
-    const tl = gsap.timeline();
+    if (prefersReducedMotion()) return;
+    const mobile = window.innerWidth < 768;
+    const tl = gsap.timeline({ defaults: { ease: 'expo.out' } });
 
-    // Sur mobile : animations ultra-rapides pour affichage immédiat
-    // Sur desktop : animations légèrement plus élégantes
-    tl.fromTo('.hero-line',
-      { y: mobile ? 20 : 50, opacity: 0 },
-      {
-        y: 0,
-        opacity: 1,
-        duration: mobile ? 0.45 : 0.7,
-        stagger: mobile ? 0.055 : 0.08,
-        ease: 'expo.out',
-        delay: 0
-      }
-    )
-      .fromTo('.proof-card',
-        { y: mobile ? 15 : 40, opacity: 0, scale: mobile ? 1 : 0.97 },
-        {
-          y: 0,
-          opacity: 1,
-          scale: 1,
-          duration: mobile ? 0.4 : 0.6,
-          stagger: 0.06,
-          ease: 'expo.out'
-        },
-        mobile ? '-=0.2' : '-=0.4'
-      );
+    // y: 0 explicite : écrase le décalage CSS posé avant l'hydratation (sinon GSAP le conserve)
+    tl.fromTo('.hero-letter', { yPercent: 105, y: 0 }, { yPercent: 0, y: 0, duration: mobile ? 0.9 : 1.25, stagger: 0.045 })
+      .fromTo('.hero-person',
+        { y: mobile ? 30 : 70, opacity: 0, filter: 'blur(14px)' },
+        { y: 0, opacity: 1, filter: 'blur(0px)', duration: 1.4, clearProps: 'filter' }, 0.25)
+      .fromTo('.hero-label', { opacity: 0, y: 8 }, { opacity: 1, y: 0, duration: 0.8, stagger: 0.06 }, 0.55)
+      .fromTo('.hero-line', { yPercent: 110, y: 0 }, { yPercent: 0, y: 0, duration: 1.1, stagger: 0.09 }, 0.6)
+      .fromTo('.hero-proof', { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.9 }, 0.9)
+      .fromTo('.hero-cta', { scale: 0, rotate: -90 }, { scale: 1, rotate: 0, duration: 1.1, ease: 'back.out(1.6)' }, 0.85);
+
+    if (!mobile) {
+      gsap.to('.hero-word', {
+        yPercent: -18,
+        ease: 'none',
+        scrollTrigger: { trigger: container.current, start: 'top top', end: 'bottom top', scrub: true },
+      });
+      gsap.to('.hero-person-wrap', {
+        yPercent: 10,
+        scale: 1.05,
+        ease: 'none',
+        scrollTrigger: { trigger: container.current, start: 'top top', end: 'bottom top', scrub: true },
+      });
+    }
   }, { scope: container });
 
   return (
     <section
       id="accueil"
+      data-nav="light"
       ref={container}
-      className="relative min-h-screen flex flex-col items-center pt-28 pb-12 overflow-hidden"
+      className="relative isolate min-h-[640px] h-[100svh] md:min-h-[760px] overflow-hidden"
+      style={{ background: 'linear-gradient(180deg, #a3a8ad 0%, #b3b7bb 34%, #cfd2d5 62%, #e7e8e9 84%, #efefef 100%)' }}
     >
-      {/* Background glows — masqués sur mobile pour éviter la charge GPU */}
-      <div className="hidden md:block absolute top-0 left-0 w-[600px] h-[600px] bg-[#5eb1ff]/15 rounded-full blur-[130px] pointer-events-none -translate-x-1/3 -translate-y-1/4 will-change-transform" />
-      <div className="hidden md:block absolute bottom-0 right-0 w-[500px] h-[500px] bg-[#3b82f6]/10 rounded-full blur-[120px] pointer-events-none translate-x-1/3 translate-y-1/4 will-change-transform" />
-      {/* Version allégée des glows pour mobile (blur réduit, pas de GPU overload) */}
-      <div className="md:hidden absolute top-0 left-0 w-[250px] h-[250px] bg-[#5eb1ff]/10 rounded-full blur-[60px] pointer-events-none -translate-x-1/4 -translate-y-1/4" />
-
-      {/* Headline + CTA */}
-      <div className="relative z-10 flex flex-col items-center text-center px-5 max-w-4xl mx-auto mt-10 md:mt-16">
-        <div className="hero-line">
-          <div className="inline-flex items-center gap-2 bg-white/5 border border-white/10 rounded-full px-4 py-1.5 text-xs text-gray-400 mb-8 tracking-wide">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#5eb1ff] animate-pulse" />
-            Agence Digitale · Sites Web · Logiciels · IA
+      {/* Wordmark */}
+      <div className="relative px-4 md:px-8 pt-16 md:pt-[72px]">
+        <div className="hero-word">
+          <div ref={wordRef} className="wordmark text-blue select-none w-max" aria-hidden="true" style={{ fontSize: '19vw' }}>
+            {WORD.split('').map((l, i) => (
+              <span key={i} className="inline-block overflow-hidden align-top pb-[0.02em]">
+                <span className="hero-letter inline-block will-change-transform">{l}</span>
+              </span>
+            ))}
           </div>
         </div>
 
-        <div className="hero-line">
-          <h1 className="text-4xl sm:text-5xl md:text-[5.5rem] font-light leading-[1.05] tracking-tight mb-5">
-            Propulsez votre PME<br className="hidden sm:block" />{' '}
-            dans <span className="font-bold text-[#5eb1ff]">l'ère du Digital</span>
-          </h1>
-        </div>
-
-        <div className="hero-line">
-          <p className="text-gray-400 text-sm sm:text-[15px] font-light mb-10 max-w-md leading-relaxed">
-            Sites Internet, logiciels sur-mesure et intelligence artificielle. Des solutions simples pour développer votre activité et gagner du temps.
-          </p>
-        </div>
-
-        <div className="hero-line w-full max-w-md flex flex-col gap-3 sm:block">
-          {/* Mobile: separate stacked elements */}
-          <div className="sm:hidden flex flex-col gap-3 w-full">
-            <input
-              type="email"
-              placeholder="Votre adresse email"
-              className="bg-white/5 border border-white/10 outline-none px-5 py-3.5 w-full text-white placeholder:text-gray-500 text-sm rounded-2xl"
-            />
-            <a
-              href="mailto:mamadousanogo352@gmail.com"
-              className="bg-[#5eb1ff] text-black py-3.5 rounded-2xl font-medium text-sm hover:bg-white transition-colors text-center w-full block"
-            >
-              Démarrer mon projet
-            </a>
+        {/* Filet + labels */}
+        <div className="mt-2 md:mt-3 border-t border-black/[0.12] pt-3 hidden sm:flex justify-between gap-6 text-text">
+          <div className="flex gap-6 md:gap-14">
+            <p className="hero-label label">Sites web & e-commerce</p>
+            <p className="hero-label label hidden sm:block">Logiciels SaaS</p>
           </div>
-          {/* Desktop: unified pill form */}
-          <div className="hidden sm:flex items-center bg-white/5 border border-white/10 rounded-full p-1.5 w-full backdrop-blur-sm">
-            <input
-              type="email"
-              placeholder="Votre adresse email"
-              className="bg-transparent outline-none px-5 py-3 w-full text-white placeholder:text-gray-500 text-sm"
-            />
-            <a
-              href="mailto:mamadousanogo352@gmail.com"
-              className="bg-[#5eb1ff] text-black px-7 py-3 rounded-full font-medium text-sm hover:bg-white transition-colors whitespace-nowrap shrink-0"
-            >
-              Démarrer
-            </a>
-          </div>
+          <p className="hero-label label text-right">Agents IA & automatisation</p>
         </div>
       </div>
 
-      {/* Proof Cards — mobile: vertical stack, desktop: asymmetric row */}
-      <div className="relative z-10 w-full max-w-5xl mx-auto px-5 mt-14 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 items-start">
+      {/* Personnage détouré, devant le wordmark */}
+      <div className="hero-person-wrap absolute left-1/2 -translate-x-1/2 md:-translate-x-[46%] top-[92px] sm:top-[110px] md:top-[13vw] lg:top-[150px] h-[66%] sm:h-[calc(100%-110px)] aspect-[4/5] pointer-events-none">
+        <img
+          src="/hero/hero.webp"
+          alt="Deux jeunes entrepreneurs maliens en blazer, laptop et tablette à la main"
+          width={1122}
+          height={1402}
+          fetchPriority="high"
+          decoding="async"
+          className="hero-person w-full h-full object-contain object-top [mask-image:linear-gradient(to_bottom,black_62%,transparent_96%)]"
+        />
+      </div>
 
-        {/* Card 1: AI Chat demo */}
-        <div className="proof-card bg-[#060e20] border border-[#5eb1ff]/15 rounded-3xl p-5 flex flex-col gap-3 lg:col-span-1 shadow-lg">
-          <div className="flex items-center gap-2.5 mb-1">
-            <div className="w-7 h-7 rounded-full bg-[#5eb1ff]/15 border border-[#5eb1ff]/25 flex items-center justify-center">
-              <Bot className="w-3.5 h-3.5 text-[#5eb1ff]" />
-            </div>
-            <span className="text-xs font-medium text-white">DIGIBOT</span>
-            <span className="ml-auto flex items-center gap-1 text-[10px] text-green-400">
-              <span className="w-1.5 h-1.5 rounded-full bg-green-400" /> En ligne
+      {/* Labels flottants */}
+      <p className="hero-label label absolute left-[19%] top-[52%] text-text hidden md:block">Design & branding</p>
+      <p className="hero-label label absolute right-[6%] top-[51%] text-text hidden md:block max-w-[100px]">Data & tableaux de bord</p>
+
+      {/* Fondu vers le papier */}
+      <div className="absolute inset-x-0 bottom-0 h-[28%] pointer-events-none bg-gradient-to-b from-transparent to-paper" />
+
+      {/* Titre (mode difference : sombre sur le gris, clair sur le personnage) */}
+      <div className="absolute left-4 md:left-8 right-4 md:right-auto bottom-[112px] md:bottom-[124px]">
+        <h1 className="display text-[clamp(36px,7.1vw,104px)] whitespace-nowrap leading-[0.9]">
+          <span className="sr-only">DigiCraft, agence digitale au Mali : sites web, logiciels SaaS, IA et automatisation. </span>
+          {/* Le span en difference est lui-même animé : aucun parent ne doit créer de contexte d'empilement */}
+          <span className="reveal-mask">
+            <span className="hero-line inline-block text-[#e4e4e4] mix-blend-difference">Vendez plus. Gérez</span>
+            <span className="hero-line inline-block align-top ml-[0.12em] mt-[0.06em]">
+              <Asterisk className="block w-[0.32em] h-[0.32em] text-blue" />
             </span>
-          </div>
-          <div className="flex flex-col gap-2.5 text-[12px]">
-            <div className="bg-[#5eb1ff]/10 border border-[#5eb1ff]/15 rounded-2xl rounded-tl-sm px-3.5 py-2.5 text-gray-300 max-w-[85%]">
-              Comment automatiser mes factures ?
-            </div>
-            <div className="bg-white/5 border border-white/10 rounded-2xl rounded-tr-sm px-3.5 py-2.5 text-gray-300 max-w-[85%] self-end text-right">
-              Je configure un agent IA pour ça en 48h.
-            </div>
-            <div className="bg-[#5eb1ff]/10 border border-[#5eb1ff]/15 rounded-2xl rounded-tl-sm px-3.5 py-2.5 text-gray-300 max-w-[85%]">
-              Combien ça coûte ?
-            </div>
-            <div className="flex gap-1 items-center px-1">
-              <span className="w-1.5 h-1.5 rounded-full bg-gray-500 animate-bounce" style={{ animationDelay: '0ms' }} />
-              <span className="w-1.5 h-1.5 rounded-full bg-gray-500 animate-bounce" style={{ animationDelay: '150ms' }} />
-              <span className="w-1.5 h-1.5 rounded-full bg-gray-500 animate-bounce" style={{ animationDelay: '300ms' }} />
-            </div>
-          </div>
-        </div>
+          </span>
+          <span className="reveal-mask">
+            <span className="hero-line block text-ghost">mieux.</span>
+          </span>
+        </h1>
+      </div>
 
-        {/* Card 2: Live growth chart */}
-        <div className="proof-card bg-[#060e20] border border-[#5eb1ff]/15 rounded-3xl p-5 flex flex-col lg:col-span-1 shadow-lg">
-          <div className="flex items-start justify-between mb-4">
-            <div>
-              <p className="text-[11px] text-gray-500 mb-0.5 uppercase tracking-wider">Croissance clients</p>
-              <p className="text-2xl font-semibold text-white">+24%</p>
-            </div>
-            <div className="flex items-center gap-1 bg-green-500/10 border border-green-500/20 rounded-full px-2.5 py-1 text-[11px] text-green-400">
-              <TrendingUp className="w-3 h-3" />
-              Cette année
-            </div>
+      {/* Preuve + CTA */}
+      <div className="absolute inset-x-4 md:inset-x-8 bottom-6 md:bottom-9 flex items-end justify-between gap-4">
+        <div className="hero-proof flex items-center gap-4">
+          <div className="flex -space-x-3">
+            {testimonials.slice(0, 3).map(t => (
+              <span key={t.name} className="block w-10 h-10 md:w-12 md:h-12 rounded-full overflow-hidden ring-2 ring-paper">
+                <Avatar spec={t.avatar} className="w-full h-full" />
+              </span>
+            ))}
           </div>
-          <div className="relative h-28 w-full mt-auto">
-            <svg className="w-full h-full overflow-visible" viewBox="0 0 200 80" preserveAspectRatio="none">
-              <defs>
-                <linearGradient id="chart-fill" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor="#5eb1ff" stopOpacity="0.2" />
-                  <stop offset="100%" stopColor="#5eb1ff" stopOpacity="0" />
-                </linearGradient>
-              </defs>
-              <path
-                d="M 0 65 C 30 65, 50 50, 80 40 S 130 20, 160 15 S 185 10, 200 5 L 200 80 L 0 80 Z"
-                fill="url(#chart-fill)"
-              />
-              <path
-                d="M 0 65 C 30 65, 50 50, 80 40 S 130 20, 160 15 S 185 10, 200 5"
-                fill="none"
-                stroke="#5eb1ff"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-              />
-              {([[0,65],[80,40],[160,15],[200,5]] as [number,number][]).map(([x, y], i) => (
-                <circle key={i} cx={x} cy={y} r="2.5" fill="#060e20" stroke="#5eb1ff" strokeWidth="1.5" />
-              ))}
-            </svg>
-          </div>
-          <div className="flex justify-between text-[10px] text-gray-600 mt-1 px-0.5">
-            <span>Jan</span><span>Mars</span><span>Juin</span><span>Aujourd'hui</span>
+          <div className="flex items-center gap-4">
+            <span className="display text-[34px] md:text-[44px] leading-none text-text">30<span className="text-blue">+</span></span>
+            <span className="label text-muted max-w-[160px] hidden sm:block">projets livrés pour des PME au Mali et en Afrique de l’Ouest</span>
           </div>
         </div>
-
-        {/* Card 3: Services offered */}
-        <div className="proof-card bg-[#060e20] border border-[#5eb1ff]/15 rounded-3xl p-5 flex flex-col gap-3 sm:col-span-2 lg:col-span-1 shadow-lg">
-          <div className="flex items-center justify-between mb-1">
-            <p className="text-xs font-medium text-white">Nos Services</p>
-            <a href="#services" className="text-[#5eb1ff] hover:text-white transition-colors">
-              <ArrowUpRight className="w-4 h-4" />
-            </a>
-          </div>
-          {[
-            { label: 'Sites Web & E-commerce', dot: 'bg-[#5eb1ff]' },
-            { label: 'Applications SaaS', dot: 'bg-[#93c5fd]' },
-            { label: 'Design Graphique & Logos', dot: 'bg-[#3b82f6]' },
-            { label: 'Agents IA & Automatisation', dot: 'bg-[#bfdbfe]' },
-            { label: 'Analyse de Données', dot: 'bg-[#2563eb]' },
-          ].map((s, i) => (
-            <div
-              key={i}
-              className="flex items-center gap-3 bg-white/5 border border-white/[0.07] rounded-xl px-3.5 py-2.5 text-sm text-gray-300 hover:border-white/15 hover:text-white transition-all duration-200"
-            >
-              <span className={`w-2 h-2 rounded-full shrink-0 ${s.dot}`} />
-              {s.label}
-            </div>
-          ))}
-        </div>
+        <CircleArrow
+          href={mailto()}
+          label="Démarrer un projet"
+          tone="white"
+          className="hero-cta w-[84px] h-[84px] md:w-[140px] md:h-[140px] shadow-[0_10px_30px_-12px_rgba(20,30,50,0.25)]"
+          iconClassName="w-[26%] h-[26%]"
+        />
       </div>
     </section>
   );
