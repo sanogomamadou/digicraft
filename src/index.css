@@ -51,6 +51,18 @@ body {
   .js .hero-cta { transform: scale(0); }
 }
 
+/* Titre du hero « inversé » sur le duo : remplissage par image, recalé en JS (Hero.tsx).
+   Fonctionne sur Safari, contrairement à mix-blend-mode sur un élément animé. */
+.hero-invert { color: var(--color-text); }
+.hero-invert.is-on {
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+  background-image: url(/hero/hero-inverse.webp), linear-gradient(var(--color-text), var(--color-text));
+  background-repeat: no-repeat;
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+
 /* Lenis */
 html.lenis, html.lenis body { height: auto; }
 .lenis.lenis-smooth { scroll-behavior: auto !important; }

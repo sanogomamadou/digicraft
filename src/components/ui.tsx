@@ -108,12 +108,16 @@ export function useFitText<T extends HTMLElement>(deps: unknown[] = []) {
     // On observe aussi le texte : quand la police Archivo arrive (chargée en asynchrone),
     // sa largeur change et on réajuste. fonts.ready seul ne suffit pas : il peut se
     // résoudre avant même que le chargement de la police ait commencé.
-    const ro = new ResizeObserver(fit);
+    // requestAnimationFrame : on ne modifie pas l'élément observé pendant la notification
+    // (sinon Safari lève « ResizeObserver loop completed with undelivered notifications »)
+    let raf = 0;
+    const ro = new ResizeObserver(() => { cancelAnimationFrame(raf); raf = requestAnimationFrame(fit); });
     ro.observe(parent);
     ro.observe(el);
     document.fonts?.ready.then(fit);
     document.fonts?.addEventListener?.('loadingdone', fit);
     return () => {
+      cancelAnimationFrame(raf);
       ro.disconnect();
       document.fonts?.removeEventListener?.('loadingdone', fit);
     };

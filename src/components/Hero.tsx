@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 import { Asterisk, CircleArrow, mailto, prefersReducedMotion, useFitText } from './ui';
@@ -41,6 +41,50 @@ export default function Hero() {
     }
   }, { scope: container });
 
+  // Effet « inversé » du titre, sans mix-blend-mode (que Safari abandonne dès qu'un élément
+  // est animé). Les lettres sont remplies avec une image pré-calculée du duo aux couleurs
+  // inversées (hero-inverse.webp), recalée chaque frame sous la vraie photo : sombre sur le
+  // fond et le blazer, clair sur le pantalon. Desktop uniquement (sur mobile, le titre est
+  // sous le duo) : l'image n'est pas téléchargée sur téléphone.
+  useEffect(() => {
+    const root = container.current;
+    if (!root) return;
+    const lines = Array.from(root.querySelectorAll<HTMLElement>('.hero-invert'));
+    const person = root.querySelector<HTMLImageElement>('.hero-person');
+    if (!lines.length || !person) return;
+
+    let ready = false;
+    let started = false;
+    const align = () => {
+      const on = ready && window.innerWidth >= 768 && window.scrollY < window.innerHeight * 1.2;
+      if (!on) {
+        if (window.innerWidth < 768) lines.forEach(l => l.classList.remove('is-on'));
+        return;
+      }
+      const pr = person.getBoundingClientRect();
+      for (const l of lines) {
+        const er = l.getBoundingClientRect();
+        l.style.backgroundSize = `${pr.width}px ${pr.height}px, 100% 100%`;
+        l.style.backgroundPosition = `${pr.left - er.left}px ${pr.top - er.top}px, 0 0`;
+        l.classList.add('is-on');
+      }
+    };
+    const start = () => {
+      if (started || window.innerWidth < 768) return;
+      started = true;
+      const img = new Image();
+      img.onload = () => { ready = true; align(); };
+      img.src = '/hero/hero-inverse.webp';
+      gsap.ticker.add(align);
+    };
+    start();
+    window.addEventListener('resize', start);
+    return () => {
+      window.removeEventListener('resize', start);
+      gsap.ticker.remove(align);
+    };
+  }, []);
+
   return (
     <section
       id="accueil"
@@ -72,7 +116,7 @@ export default function Hero() {
       </div>
 
       {/* Personnage détouré, devant le wordmark */}
-      <div className="hero-person-wrap absolute left-1/2 -translate-x-1/2 md:-translate-x-[40%] lg:-translate-x-[35%] top-[92px] sm:top-[110px] md:top-[13vw] lg:top-[150px] h-[66%] sm:h-[calc(100%-110px)] aspect-[4/5] pointer-events-none">
+      <div className="hero-person-wrap absolute left-1/2 -translate-x-1/2 md:-translate-x-[46%] top-[92px] sm:top-[110px] md:top-[13vw] lg:top-[150px] h-[66%] sm:h-[calc(100%-110px)] aspect-[4/5] pointer-events-none">
         <img
           src="/hero/hero.webp"
           alt="Deux jeunes entrepreneurs maliens en blazer, laptop et tablette à la main"
@@ -91,19 +135,18 @@ export default function Hero() {
       {/* Fondu vers le papier */}
       <div className="absolute inset-x-0 bottom-0 h-[28%] pointer-events-none bg-gradient-to-b from-transparent to-paper" />
 
-      {/* Titre en couleurs pleines : pas de mix-blend-mode, que Safari (iPhone, Mac) cesse
-          d'appliquer dès que l'élément est animé (le texte devenait invisible). */}
+      {/* Titre : la 1re ligne s'inverse sur le duo (voir l'effet ci-dessus) */}
       <div className="absolute left-4 md:left-8 right-4 md:right-auto bottom-[112px] md:bottom-[124px]">
-        <h1 className="display text-[clamp(52px,6.2vw,92px)] whitespace-nowrap leading-[0.9]">
+        <h1 className="display text-[clamp(36px,7.1vw,104px)] whitespace-nowrap leading-[0.9]">
           <span className="sr-only">DigiCraft, agence digitale au Mali : sites web, logiciels SaaS, IA et automatisation. </span>
           <span className="reveal-mask">
-            <span className="hero-line block text-text">Vendez plus.</span>
-          </span>
-          <span className="reveal-mask">
-            <span className="hero-line inline-block text-ghost">Gérez mieux.</span>
-            <span className="hero-line inline-block align-top ml-[0.1em] mt-[0.06em]">
+            <span className="hero-line hero-invert inline-block">Vendez plus. Gérez</span>
+            <span className="hero-line inline-block align-top ml-[0.12em] mt-[0.06em]">
               <Asterisk className="block w-[0.32em] h-[0.32em] text-blue" />
             </span>
+          </span>
+          <span className="reveal-mask">
+            <span className="hero-line block text-ghost">mieux.</span>
           </span>
         </h1>
       </div>
